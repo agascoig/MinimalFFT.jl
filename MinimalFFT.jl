@@ -26,6 +26,14 @@
 # The purpose of this MinimalFFT module is to provide a basic
 # implementation of the AbstractFFTs FFT interface.
 #
+# References
+# [1] Takahasi, Daisuke.  "Fast Fourier Transform Algorithms for Parallel Computers"
+#     Springer Nature, Oct 5, 2019.
+# [2] "Chirp Z-transform, Bluestein's algorithm." Wikipedia.  Accessed May 9th, 2024.
+# [3] Saad Bouguezel, M. Omair Ahmad, M.N.S. Swamy. "An Alternate Approach for
+#     Developing Higher Radix FFT Algorithms."  APCCAS 2006.
+# [4] Van Loan, Charles.  "Computational Frameworks for the Fast Fourier Transform."
+#     SIAM.  1992.
 
 module MinimalFFT
 
@@ -301,72 +309,55 @@ end
 
 # inner fft, ifft dispatch routines
 
-function inner_fft(x::Vector{Complex{T}}) where {T<:Real}
+function do_inner_fn!(x::Vector{T},inverse) where {T<:Complex}
     N = length(x)
+    if N<16
+        direct_dft!(x,inverse)
+    elseif (N & (N-1))==0
+        fftr2!(x,inverse)
+    else
+        fft_bluestein!(x,inverse)
+    end
+    x
+end
+
+function inner_fft(x::Vector{T}) where {T<:Complex}
     X = copy(x)
     inner_fft!(X)
     X
 end
 
-function inner_fft!(x::Vector{Complex{T}}) where {T<:Real}
-    N = length(x)
-    if N<16
-        direct_dft!(x,false)
-    elseif (N & (N-1))==0
-        fftr2!(x,false)
-    else
-        fft_bluestein!(x,false)
-    end
+function inner_fft!(x::Vector{T}) where {T<:Complex}
+    do_inner_fn!(x,false)
     x
 end
 
-function inner_ifft!(x::Vector{Complex{T}}, scale=true) where {T<:Real}
-    N = length(x)
-    if N<16
-        direct_dft!(x,true)
-    elseif (N & (N-1))==0
-        fftr2!(x,true)
-    else
-        fft_bluestein!(x,true)
-    end
+function inner_ifft!(x::Vector{T}, scale=true) where {T<:Complex}
+    do_inner_fn!(x,true)
     if scale
-        x.= x/N
+        N = length(x)
+        x .= x/N
     end
     x
 end
 
 function inner_ifft(X::Vector{Complex{T}}, scale=true) where {T<:Real}
-    N = length(X)
     x = copy(X)
     inner_ifft!(x,scale)
     x
 end
 
 function inner_rfft(x::Vector{T}) where {T<:Number}
-    X = convert(Vector{ComplexF64}, x) # TBD: more specific cases
-    N = length(x)
-    if N<16
-        direct_dft_real!(X,false)
-    elseif (N & (N-1))==0
-        fftr2_real!(X,false)
-    else
-        fft_bluestein_real!(X,false)
-    end
+    X = convert(Vector{ComplexF64}, x)
+    do_inner_fn!(X, false)
     X[1:(size(x)[1] ÷ 2) + 1]
 end
 
 function inner_irfft(X::Vector{Complex{T}},d,scale=false) where {T<:Number}
     x = vcat(X,conj(X[end-((d+1)&1):-1:2]))
-    N = length(x)
-    if N<16
-        direct_dft!(x, true)
-    elseif (N & (N-1))==0
-        fftr2!(x,true)
-    else
-        fft_bluestein!(x,true)
-    end
+    do_inner_fn!(x, true)
     if scale
-        x .= x/N
+        x .= x/d
     end
     x
 end
@@ -385,100 +376,44 @@ rfft(x::Vector{T}, region) where {T<:Number} = inner_rfft(x)[1:(size(x)[1] ÷ 2)
 
 irfft(X::Vector{Complex{T}}, d::Integer) where {T<:Real} = inner_irfft(X, d)
 
-# MinimalFFT FFT and IFFT routines
+# Complex FFT/IFFT routines
 
-function bitrev!(x)
-    N = length(x)
-    shamt = leading_zeros(N) + 1
-    for n = 0:N-1
-        r = bitreverse(n)
-        r = r >>> shamt
-        if n < r
-            @inbounds x[n+1], x[r+1] = x[r+1], x[n+1]
-        end
-    end
-    x
-end
-
-function fftr2(x::Vector{T}, invert=false) where {T<:Complex}
-    X = copy(x)
-    fftr2!(X,invert)
-    X
-end
-
-function fftr2!(X::Vector{T}, invert=false) where {T<:Complex}
+function fftr2!(X::Vector{T},inverse=false) where {T<:Complex}
     N = length(X)
-    
-    @assert (N!=0 && (N & (N-1))==0) "fftr2!: N=$N, vector length must be power of 2"
-    
-    bitrev!(X)
-    
-    n = 1
-    
-    e_pi = invert ? 1.0im * pi : -1.0im * pi
-    
-    while n<N
+
+    Y = zeros(T, N)
+
+    p = 63-leading_zeros(N)
+    l = N ÷ 2
+    m = 1
+
+    for t=1:p
+        w_l = inverse ? exp(1.0im * pi / l) : exp(-1.0im * pi / l)
         w = one(T)
-        w_n = exp(e_pi / n)
-        for k = 1:n
-            i0 = k
-            i1 = i0 + n
-            while i1<=N
-                @inbounds y0 = X[i0]
-                @inbounds y1 = X[i1] * w
-                @inbounds X[i0] = y0 + y1
-                @inbounds X[i1] = y0 - y1
-                i0 += (n << 1)
-                i1 += (n << 1)
+        for j=0:l-1
+            for k=0:m-1
+                @inbounds c0 = X[k + j * m + 1]
+                @inbounds c1 = X[k + j * m + l * m + 1]
+                @inbounds Y[k + 2 * j * m + 1] = c0+c1
+                @inbounds Y[k + 2 * j * m + m + 1] = w*(c0-c1)
             end
-            w = w * w_n
+            w = w * w_l
         end
-        n = n << 1
+        l >>>= 1
+        m <<= 1
+        X, Y = Y, X
     end
     X
 end
 
-function fftr2_real!(X::Vector{T}, invert=false) where {T<:Complex}
-#TBD: possibly modify for real case
-    N = length(X)
-    
-    @assert (N!=0 && (N & (N-1))==0) "fftr2_real!: N=$N, vector length must be power of 2"
-    
-    bitrev!(X)
-    
-    n = 1
-    
-    e_pi = invert ? 1.0im * pi : -1.0im * pi
-    
-    while n<N
-        w = one(T)
-        w_n = exp(e_pi / n)
-        for k = 1:n
-            i0 = k
-            i1 = i0 + n
-            while i1<=N
-                @inbounds y0 = X[i0]
-                @inbounds y1 = X[i1] * w
-                @inbounds X[i0] = y0 + y1
-                @inbounds X[i1] = y0 - y1
-                i0 += (n << 1)
-                i1 += (n << 1)
-            end
-            w = w * w_n
-        end
-        n = n << 1
-    end
-    X
-end
-
-function fft_bluestein!(x::Vector{T}, invert=false) where {T<:Complex}
+function fft_bluestein!(x::Vector{T}, inverse=false) where {T<:Complex}
     N = length(x)
     M = nextpow(2, 2*N-1)
     
     a_n = zeros(T, M)
     b_n = zeros(T, M)
     
-    impiN = invert ? 1.0im*pi/N : -1.0im*pi/N
+    impiN = inverse ? 1.0im*pi/N : -1.0im*pi/N
     
     a_n[1]=x[1]
     b_n[1]=1
@@ -490,54 +425,26 @@ function fft_bluestein!(x::Vector{T}, invert=false) where {T<:Complex}
     end
     
     # convolve a_n with b_n
-    A_X = fftr2!(a_n,false)
-    B_X = fftr2(b_n,false)
+    A_X = a_n
+    B_X = copy(b_n)
+    fftr2!(A_X,false)
+    fftr2!(B_X,false)
     A_X .*= B_X
-    fftr2!(A_X, true)
+    fftr2!(A_X,true)
     scale = 1.0/M
     A_X .= A_X*scale
     x .= conj(b_n[1:N]).*A_X[1:N]
     x
-end
-
-function fft_bluestein_real!(x::Vector{T}, invert=false) where {T<:Complex}
-    # TBD: specialize for the real case
-    N = length(x)
-    M = nextpow(2, 2*N-1)
-    
-    a_n = zeros(T, M)
-    b_n = zeros(T, M)
-    
-    impiN = invert ? 1.0im*pi/N : -1.0im*pi/N
-    
-    a_n[1]=x[1]
-    b_n[1]=1
-    for n=1:N-1
-        e=exp(impiN*n*n)
-        a_n[n+1]=x[n+1]*e
-        b_n[n+1]=conj(e)
-        b_n[M-n+1]=b_n[n+1]
-    end
-    
-    # convolve a_n with b_n
-    A_X = fftr2!(a_n,false)
-    B_X = fftr2(b_n,false)
-    A_X .*= B_X
-    fftr2!(A_X, true)
-    scale = 1.0/M
-    A_X .= A_X*scale
-    x .= conj(b_n[1:N]).*A_X[1:N]
-    x 
 end
 
 # For approx N<20, the direct DFT can be as fast as the FFT
 # due to lower communication cost.
-function direct_dft!(x::Vector{T}, invert=false) where {T<:Complex}
+function direct_dft!(x::Vector{T}, inverse=false) where {T<:Complex}
     N = length(x)
     X = zeros(T, size(x))
-    A = invert ? 2.0im*pi/N : -2.0im*pi/N
+    A = inverse ? 2.0im*pi/N : -2.0im*pi/N
     for k=1:N
-        W_step = exp(A*(k-1)) # faster than sincos
+        W_step = exp(A*(k-1))
         W = 1.0+0.0im
         for n=1:N
             @inbounds X[k]+=x[n]*W
@@ -545,22 +452,7 @@ function direct_dft!(x::Vector{T}, invert=false) where {T<:Complex}
         end
     end
     x .= X
-end
-
-function direct_dft_real!(x::Vector{T}, invert=false) where {T<:Complex}
-    N = length(x)
-    X = zeros(T, size(x))
-    A = invert ? 2.0im*pi/N : -2.0im*pi/N
-    L = (N ÷ 2) + 1
-    for k=1:L
-        W_step = exp(A*(k-1)) # faster than sincos
-        W = 1.0+0.0im
-        for n=1:N
-            @inbounds X[k]+=x[n]*W
-            W *= W_step
-        end
-    end
-    x .= X
+    x
 end
 
 end # module
