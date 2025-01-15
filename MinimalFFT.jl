@@ -19,10 +19,6 @@
 # OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT
 # OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-# end of terms and conditions
-#
-# Please see THIRDPARTY.md for license information for other software used in this project.
-#
 # The purpose of this MinimalFFT module is to provide a basic
 # implementation of the AbstractFFTs FFT interface.
 #
@@ -109,9 +105,7 @@ function AdjointStyle(p::MyPlan{T}) where {T}
     FFTAdjointStyle()
 end
 
-function size(p::MyPlan{T}) where {T<:Number}
-    p.n # the FFT input size
-end
+size(p::MyPlan{T}) where {T<:Number} = p.n # the FFT input size
 
 # mul! routines.  inner routines handle complex conversion.
 
@@ -317,16 +311,9 @@ function do_inner_fn!(x::Vector{T},inverse) where {T<:Complex}
     x
 end
 
-function inner_fft(x::Vector{T}) where {T<:Complex}
-    X = copy(x)
-    inner_fft!(X)
-    X
-end
+inner_fft(x::Vector{T}) where {T<:Complex} = (X = copy(x); inner_fft!(X))
 
-function inner_fft!(x::Vector{T}) where {T<:Complex}
-    do_inner_fn!(x,false)
-    x
-end
+inner_fft!(x::Vector{T}) where {T<:Complex} = do_inner_fn!(x,false)
 
 function inner_ifft!(x::Vector{T}, scale=true) where {T<:Complex}
     do_inner_fn!(x,true)
@@ -337,11 +324,7 @@ function inner_ifft!(x::Vector{T}, scale=true) where {T<:Complex}
     x
 end
 
-function inner_ifft(X::Vector{Complex{T}}, scale=true) where {T<:Real}
-    x = copy(X)
-    inner_ifft!(x,scale)
-    x
-end
+inner_ifft(X::Vector{Complex{T}}, scale=true) where {T<:Real} = (x = copy(X); inner_ifft!(x,scale))
 
 function inner_rfft(x::Vector{T}) where {T<:Number}
     X = convert(Vector{ComplexF64}, x)
