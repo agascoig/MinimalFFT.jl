@@ -5,8 +5,6 @@ using AbstractFFTs: TestUtils
 using AbstractFFTs.LinearAlgebra
 using Test
 
-using Infiltrator # TBD: remove
-
 # Ground truth x_fft computed using FFTW library
 const TEST_CASES = (
             (; x = collect(1:7), dims = 1,
@@ -91,7 +89,7 @@ function TestUtils.test_plan_adjoint(P::AbstractFFTs.Plan, x::AbstractArray; rea
 end
 
 function TestUtils.test_complex_ffts(ArrayType=Array; test_inplace=true, test_adjoint=true) 
-    @testset "correctness of fft, bfft, ifft" failfast=true begin
+    @testset "correctness of fft, bfft, ifft" begin
         for test_case in TEST_CASES
             _x, dims, _x_fft = copy(test_case.x), test_case.dims, copy(test_case.x_fft)
             x = convert(ArrayType, _x) # dummy array that will be passed to plans
@@ -180,7 +178,7 @@ function TestUtils.test_complex_ffts(ArrayType=Array; test_inplace=true, test_ad
 end
 
 function TestUtils.test_real_ffts(ArrayType=Array; test_adjoint=true, copy_input=false)
-    @testset "correctness of rfft, brfft, irfft" failfast=true begin
+    @testset "correctness of rfft, brfft, irfft" begin
         for test_case in TEST_CASES
             _x, dims, _x_fft = copy(test_case.x), test_case.dims, copy(test_case.x_fft)
             x = convert(ArrayType, _x) # dummy array that will be passed to plans
