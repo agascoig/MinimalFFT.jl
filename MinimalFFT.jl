@@ -48,8 +48,6 @@ import AbstractFFTs: Plan, ScaledPlan, plan_fft, fft, plan_fft!, fft!, plan_bfft
                      AdjointStyle, AdjointPlan, FFTAdjointStyle, RFFTAdjointStyle, IRFFTAdjointStyle
 import LinearAlgebra: mul!, rmul!
 
-using Infiltrator # TBD: remove
-
 mutable struct MyPlan{T} <: Plan{T}
     n::Tuple{Vararg{Int}} # Size of the FFT input
     inverse::Bool
@@ -59,7 +57,7 @@ mutable struct MyPlan{T} <: Plan{T}
     d::Int # for inverse real fft
     region::Union{Int, UnitRange{Int}}
     D::Type # destination type, for real fft 
-    pinv::ScaledPlan # keep #undef, apparently does not work in AbstractFFTs
+    pinv::ScaledPlan
     MyPlan{T}(n, inverse, inplace, real, isbfft, d, region, D) where {T} = new(n,inverse,inplace,real,isbfft,d,region,D)
     function MyPlan{T}(o::MyPlan{T}) where {T}
         if isdefined(o,:piv)
@@ -96,9 +94,7 @@ plan_bfft!(x, region; kws...) = my_plan(eltype(x),eltype(x),x,true,true,false,tr
 # rfft, irfft, brfft
 plan_rfft(x::Array{T,N}, region; kws...) where {T<:Real,N} = my_plan(T,Complex{T},x,false,false,true,false,0,region,false)
 plan_rfft(x::Array{T,N}, region; kws...) where {T<:Complex,N} = my_plan(real(T),T,x,false,false,true,false,0,region,false) # force real source type
-#plan_irfft(x::Array{T,N}, d::Integer, region; kws...) where {T<:Real,N} = my_plan{Complex{T},T}(x,false,false,true,false,d,region,true) # need !isbfft
 plan_irfft(x::Array{T,N}, d::Integer, region; kws...) where {T<:Complex,N} = my_plan(T,real(T),x,true,false,true,false,d,region,true)
-#plan_brfft(x::Array{T,N}, d::Integer, region; kws...) where {T<:Real,N} = my_plan{Complex{T},T}(x,true,false,true,true,d,region,false)
 plan_brfft(x::Array{T,N}, d::Integer, region; kws...) where {T<:Complex,N} = my_plan(T,real(T),x,true,false,true,true,d,region,false)
 
 # Adjoint support
@@ -372,7 +368,7 @@ ifft(X::Vector{Complex{T}}) where {T<:Real} = inner_ifft(X, true)
 
 ifft!(x::Vector{Complex{T}}) where {T<:Real} = inner_ifft!(x, true) 
 
-rfft(x::Vector{T}, region) where {T<:Number} = inner_rfft(x)[1:(size(x)[1] ÷ 2) + 1]
+rfft(x::Vector{T}, region) where {T<:Number} = inner_rfft(x)
 
 irfft(X::Vector{Complex{T}}, d::Integer) where {T<:Real} = inner_irfft(X, d)
 
