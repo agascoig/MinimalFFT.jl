@@ -1,0 +1,134 @@
+
+using Nemo, Symbolics, Primes
+
+# Wang, Angie.  Ph.D. Dissertation, UC Berkeley.
+# "Agile Design of Generator-Based Signal Processing
+# Hardware," 2018. p.44-51
+
+function primitive_root(n::Int)
+    c = Dict(1=>1,2=>1,4=>3,5=>2,6=>5,7=>3,9=>2,
+    10=>3,11=>2,13=>2,14=>3,17=>3,18=>5,19=>2,
+    22=>7,23=>5,25=>2,26=>7,29=>2,31=>3)
+    
+    if haskey(c, n)
+        return c[n]
+    end
+    if isprime(n)
+        phi_n = n - 1
+        factors = Primes.factor(phi_n)
+
+        for g in 2:n-1
+            if gcd(g, n) == 1
+                is_primitive = true
+                for (p, _) in factors
+                    if powermod(g, phi_n ÷ p, n) == 1
+                        is_primitive = false
+                        break
+                    end
+                end
+                if is_primitive
+                    return g
+                end
+            end
+        end
+    end
+    return nothing  # No primitive root exists
+end
+
+function cyclo_poly(n, W, x)
+    p = x^0
+    if n == 1
+        p = x - 1
+    elseif isprime(n)
+        p = sum([x^k for k = 0:n-1])
+    elseif n != 4 && iseven(n) && isprime(n ÷ 2)
+        p = sum([(-x)^k for k = 0:(n÷2)-1])
+    else
+        k = [k for k = 1:n if gcd(k, n) == 1]
+        p = prod([(x - W[i+1]) for i in k])
+    end
+    expand(p)
+end
+
+function cyclotomic_irreducible(n, W, x)
+    [cyclo_poly(d, W, x) for d in Primes.divisors(n)]
+end
+
+function gen_poly(x, W, A, B)
+    m = size(A, 1)
+
+    ipoly = cyclotomic_irreducible(m, W, x)
+
+    k_num = length(ipoly)
+    c = Dict{Tuple{Int,Int},eltype(ipoly)}()
+
+    # Precompute c_ij coefficients for polynomials
+    for i in 1:k_num-1
+        for j in i+1:k_num
+            c[(i, j)] = invmod(ipoly[i], ipoly[j])  # (2.163) Find inverse of m_i mod m_j
+        end
+    end
+
+    Am = sum([A[m-j] * x^j for j = 0:m-1]) # (2.149)
+    Bm = sum([B[m-j] * x^j for j = 0:m-1]) # (2.150)
+
+    TT = Vector{eltype(ipoly)}
+
+    u = TT(undef, k_num)
+    uprod = Am * Bm
+    for i = 1:k_num
+        mpoly = ipoly[i]
+        u[i] = rem(uprod, mpoly) # (2.162+)
+    end
+
+    v = TT(undef, k_num)
+    v[1] = u[1]
+    for i = 2:k_num
+        v[i] = u[i]
+        for j = 1:i-1
+            v[i] = rem((v[i] - v[j]) * c[(j, i)], ipoly[i]) # (2.167)
+        end
+    end
+
+    P = v[1]
+    for i = 1:k_num-1
+        P = P + v[i+1] * prod(ipoly[1:i]) # (2.168)
+    end
+    P
+end
+
+function subscript(index)
+    subscripts = "\u2080\u2081\u2082\u2083\u2084\u2085\u2086\u2087\u2088\u2089"
+    digits = string(index)
+    sub_str = join([subscripts[parse(Int, d)*3+1] for d in digits])
+    return sub_str
+end
+
+function WFTA(N)
+    g = primitive_root(N)
+    if g === nothing
+        error("No primitive root found for N=$N")
+    end
+    gs = [powermod(g, i, N) for i in 0:N]
+
+    K, zeta = cyclotomic_field(N, "W")
+
+    W = [zeta^k for k in 0:N]
+
+    x_names = ["x$(subscript(i))" for i in 0:N-1]
+
+    S1, x_vars = rational_function_field(K, x_names)
+    A = [W[i+1] for i in circshift(gs, -2)[1:N-1]]
+    B = [x_vars[i+1] for i in gs[2:N]]
+
+    S2, x = polynomial_ring(S1, "x")
+
+    P = gen_poly(x, W, A, B) # (2.147)
+
+    X = Vector{eltype(P)}(undef, N)
+    X[1] = sum([x_vars[i] for i = 1:N])
+    for i = 1:P.length
+        X[i+1] = x_vars[1] + coeff(P, gs[i+1] - 1)
+    end
+    X
+end

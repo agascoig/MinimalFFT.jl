@@ -1,0 +1,9 @@
+tmp/
+mapping/
+.DS_Store
+MinimalFFT.jl.code-workspace
+backup.sh
+*.zip
+*.out
+*.log
+*.aux
