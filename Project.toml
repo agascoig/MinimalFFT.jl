@@ -1,3 +1,7 @@
+name = "MinimalFFT"
+uuid = "c7554b57-5123-4c0d-99f5-36fc2c71d5ee"
+version = "0.1.0"
+
 [deps]
 AbstractFFTs = "621f4979-c628-5d54-868e-fcf4e3e8185c"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
