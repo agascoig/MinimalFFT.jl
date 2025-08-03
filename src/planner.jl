@@ -40,7 +40,8 @@ function do_fft(y::Vector{S}, x::Vector{T}, unused::Int64, inverse::Bool) where 
             es = [a[2] for a in fs]
             NS = [bs[i]^es[i] for i in 1:l]
             fns = [haskey(fftr_dict, bs[i]) ? fftr_dict[bs[i]] : 
-               (NS[i] < DIRECT_SZ ? direct_dft!(y,X,0,inverse) : fft_bluestein!) for i in 1:l]
+               (NS[i] < DIRECT_SZ ? direct_dft! : 
+               fft_bluestein!) for i in 1:l]
             fn = () -> prime_factor!(y, X, es..., NS..., fns..., inverse)
             y, X = fn()
         else

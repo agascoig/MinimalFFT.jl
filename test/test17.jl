@@ -17,13 +17,15 @@ include("../src/planner.jl")
 
 Random.seed!(6502)
 
-stockham_dict = Dict(2 => fftr2!,
+fn_dict = Dict(2 => fftr2!,
     3 => fftr3!,
     4 => fftr4!,
     5 => fftr5!,
     7 => fftr7!,
     8 => fftr8!,
-    9 => fftr9!
+    9 => fftr9!,
+    11 => fft_bluestein!,
+    13 => fft_bluestein!
 )
 
 function power_of(b::Int, N::Int)::Int64
@@ -80,7 +82,7 @@ function check_fft(radix::Vector{Int64}, pc::Ref{Int64}, fc::Ref{Int64}, parent_
                 if e != 0 
                     es[i] = e
                     bs[i] = r
-                    fns[i] = stockham_dict[r]
+                    fns[i] = fn_dict[r]
                     i += 1
                     break
                 end
@@ -93,7 +95,7 @@ function check_fft(radix::Vector{Int64}, pc::Ref{Int64}, fc::Ref{Int64}, parent_
     end
 end
 
-function check_do_fft(pc::Ref{Int64}, fc::Ref{Int64}, N)
+function check_do_fft(radix::Vector{Int}, pc::Ref{Int64}, fc::Ref{Int64}, N)
     Y = zeros(ComplexF64, N)
     X = randn(ComplexF64, N)
     name = "do_fft"
@@ -164,10 +166,11 @@ check_fft([2,9,5,7], pc, fc, mixed_radix!, factor_3, "mixed radix 3 test 4")
 check_fft([4,9,5,7], pc, fc, mixed_radix!, factor_3, "mixed radix 3 test 5")
 check_fft([8,9,5,7], pc, fc, mixed_radix!, factor_3, "mixed radix 3 test 6")
 
-planner_n = [256, 3^5, 3^5*2^8, 7^2*2^5, 7^2*2^6*3^4, 2^5*5^4*3^2]
+planner_n = [256, 3^5, 3^5*2^8, 7^2*2^5, 7^2*2^6*3^4, 2^5*5^4*3^2,
+11^2 * 2^8, 13 * 8, 11 * 3^5, 11^2]
 
 for n in planner_n
-    check_do_fft(pc, fc, n)
+    check_do_fft(collect(keys(fn_dict)), pc, fc, n)
 end
 
 println("$(pc[]) tests passed.")
