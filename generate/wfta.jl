@@ -15,18 +15,6 @@ macro write_text(x)
     end
 end
 
-function direct_dft(x, W::Vector{S}, X::Vector{T}, e1::Int64, inverse::Bool) where {S,T}
-    N = length(X)
-    y = Vector{typeof(x)}(undef, N)
-    for k = 1:N
-        y[k] = 0*x
-        for n = 1:N
-            y[k] += (X[n] * W[(n-1)*(k-1)%N+1])
-        end
-    end
-    y
-end
-
 function primitive_root(n::Int)
     c = Dict(1=>1,2=>1,4=>3,5=>2,6=>5,7=>3,9=>2,
     10=>3,11=>2,13=>2,14=>3,17=>3,18=>5,19=>2,
@@ -70,8 +58,6 @@ function cyclo_poly(n, FF, x)
 end
 
 function cyclotomic_irreducible(n, FF, x)
-# cannot call this due to ZZRingElem being required
-#    [Nemo.cyclotomic(d, x) for d in Primes.divisors(n)]
     [cyclo_poly(d, FF, x) for d in Primes.divisors(n)]
 end
 
@@ -141,16 +127,9 @@ function WFTA(N)
 
     x_names = ["x$(subscript(i))" for i in 0:N-1]
 
-    us_names = ["u$(subscript(i))" for i in 1:N-1]
-    vs_names = ["v$(subscript(i))" for i in 1:N-1]
-
-    all_names = vcat(x_names, us_names, vs_names)
-
-    S1, all_vars = rational_function_field(K, all_names)
+    S1, all_vars = rational_function_field(K, x_names)
     A = [W[gs_A[i]+1] for i in 1:N-1]
     B = [all_vars[gs_B[i]+1] for i in 1:N-1]
-    us = [all_vars[i+N] for i in 1:N-1]
-    vs = [all_vars[i+2N-1] for i in 1:N-1]
 
     S2, x = polynomial_ring(S1, "x")
 
@@ -161,12 +140,5 @@ function WFTA(N)
     for i = 1:N-1
         X[gs_B[i]+1] = all_vars[1] + coeff(P, (N-1)-i)
     end
-
-# commented out, for testing:
-#    DX = direct_dft(x, [zeta^k for k in 0:N-1],
-#    [all_vars[i] for i in 1:N],0,false)
-#    X, DX
     X
 end
-
-
