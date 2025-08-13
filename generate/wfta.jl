@@ -1,9 +1,31 @@
 
+# Winograd Fourier Transform Algorithm (WFTA)
+
 using Nemo, Symbolics, Primes
 
 # Wang, Angie.  Ph.D. Dissertation, UC Berkeley.
 # "Agile Design of Generator-Based Signal Processing
 # Hardware," 2018. p.44-51
+
+macro write_text(x)
+    return quote
+        println(string($(QuoteNode(x))),"=")
+        show(stdout, "text/plain", $(esc(x)))
+        println("\n")
+    end
+end
+
+function direct_dft(x, W::Vector{S}, X::Vector{T}, e1::Int64, inverse::Bool) where {S,T}
+    N = length(X)
+    y = Vector{typeof(x)}(undef, N)
+    for k = 1:N
+        y[k] = 0*x
+        for n = 1:N
+            y[k] += (X[n] * W[(n-1)*(k-1)%N+1])
+        end
+    end
+    y
+end
 
 function primitive_root(n::Int)
     c = Dict(1=>1,2=>1,4=>3,5=>2,6=>5,7=>3,9=>2,
@@ -35,29 +57,28 @@ function primitive_root(n::Int)
     return nothing  # No primitive root exists
 end
 
-function cyclo_poly(n, W, x)
-    p = x^0
-    if n == 1
-        p = x - 1
-    elseif isprime(n)
-        p = sum([x^k for k = 0:n-1])
-    elseif n != 4 && iseven(n) && isprime(n ÷ 2)
-        p = sum([(-x)^k for k = 0:(n÷2)-1])
-    else
-        k = [k for k = 1:n if gcd(k, n) == 1]
-        p = prod([(x - W[i+1]) for i in k])
+function cyclo_poly(n, FF, x)
+    R, z = polynomial_ring(ZZ, "z")
+    f = cyclotomic(n, z)
+
+    f2 = zero(FF)
+    d = degree(f)
+    for i=0:d
+        f2 += coeff(f,i)*x^i
     end
-    expand(p)
+    f2
 end
 
-function cyclotomic_irreducible(n, W, x)
-    [cyclo_poly(d, W, x) for d in Primes.divisors(n)]
+function cyclotomic_irreducible(n, FF, x)
+# cannot call this due to ZZRingElem being required
+#    [Nemo.cyclotomic(d, x) for d in Primes.divisors(n)]
+    [cyclo_poly(d, FF, x) for d in Primes.divisors(n)]
 end
 
-function gen_poly(x, W, A, B)
+function gen_poly(x, FF, A, B)
     m = size(A, 1)
 
-    ipoly = cyclotomic_irreducible(m, W, x)
+    ipoly = cyclotomic_irreducible(m, FF, x)
 
     k_num = length(ipoly)
     c = Dict{Tuple{Int,Int},eltype(ipoly)}()
@@ -70,16 +91,18 @@ function gen_poly(x, W, A, B)
     end
 
     Am = sum([A[m-j] * x^j for j = 0:m-1]) # (2.149)
-    Bm = sum([B[m-j] * x^j for j = 0:m-1]) # (2.150)
+    Bm = sum([B[j+1] * x^j for j = 0:m-1]) # (2.150)
+    uprod = Am * Bm
+    uprod = expand(uprod)
 
     TT = Vector{eltype(ipoly)}
-
     u = TT(undef, k_num)
-    uprod = Am * Bm
+
     for i = 1:k_num
         mpoly = ipoly[i]
         u[i] = rem(uprod, mpoly) # (2.162+)
     end
+    u = simplify(u)
 
     v = TT(undef, k_num)
     v[1] = u[1]
@@ -109,26 +132,41 @@ function WFTA(N)
     if g === nothing
         error("No primitive root found for N=$N")
     end
-    gs = [powermod(g, i, N) for i in 0:N]
+    gs_A = [powermod(g, i, N) for i in 2:N]
+    gs_B = [powermod(g, i, N) for i in 1:N-1]
 
     K, zeta = cyclotomic_field(N, "W")
 
-    W = [zeta^k for k in 0:N]
+    W = [zeta^k for k in 0:N-1]
 
     x_names = ["x$(subscript(i))" for i in 0:N-1]
 
-    S1, x_vars = rational_function_field(K, x_names)
-    A = [W[i+1] for i in circshift(gs, -2)[1:N-1]]
-    B = [x_vars[i+1] for i in gs[2:N]]
+    us_names = ["u$(subscript(i))" for i in 1:N-1]
+    vs_names = ["v$(subscript(i))" for i in 1:N-1]
+
+    all_names = vcat(x_names, us_names, vs_names)
+
+    S1, all_vars = rational_function_field(K, all_names)
+    A = [W[gs_A[i]+1] for i in 1:N-1]
+    B = [all_vars[gs_B[i]+1] for i in 1:N-1]
+    us = [all_vars[i+N] for i in 1:N-1]
+    vs = [all_vars[i+2N-1] for i in 1:N-1]
 
     S2, x = polynomial_ring(S1, "x")
 
-    P = gen_poly(x, W, A, B) # (2.147)
+    P = gen_poly(x, S2, A, B) # (2.147)
 
     X = Vector{eltype(P)}(undef, N)
-    X[1] = sum([x_vars[i] for i = 1:N])
-    for i = 1:P.length
-        X[i+1] = x_vars[1] + coeff(P, gs[i+1] - 1)
+    X[1] = sum([all_vars[i] for i = 1:N])
+    for i = 1:N-1
+        X[gs_B[i]+1] = all_vars[1] + coeff(P, (N-1)-i)
     end
+
+# commented out, for testing:
+#    DX = direct_dft(x, [zeta^k for k in 0:N-1],
+#    [all_vars[i] for i in 1:N],0,false)
+#    X, DX
     X
 end
+
+
