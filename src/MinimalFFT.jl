@@ -42,24 +42,7 @@ import AbstractFFTs: Plan, ScaledPlan, plan_fft, plan_fft!, plan_bfft, plan_bfft
     plan_ifft, plan_ifft!, fftdims, plan_inv, inv,
     plan_rfft, plan_irfft, plan_brfft,
     AdjointStyle, AdjointPlan, FFTAdjointStyle, RFFTAdjointStyle, IRFFTAdjointStyle
-import LinearAlgebra: mul!, rmul!
-
-const P_NONE = 0
-const P_INVERSE = 1
-const P_INPLACE = 2
-const P_REAL = 4
-const P_ISBFFT = 8
-const P_ODD = 16
-const P_SCALED = 32
-
-mutable struct MyPlan{T} <: Plan{T}
-    D::Type # destination type, for real fft 
-    n::Tuple{Vararg{Int}} # Size of the FFT input
-    region::Union{Int,UnitRange{Int}}
-    flags::Int32
-    pinv::ScaledPlan
-    MyPlan{T}(D, n, region, flags) where {T} = new(D, n, region, flags)
-end
+import LinearAlgebra: mul!, rmul!, lmul!
 
 # TBD: print plan
 ## Define how MyType is printed in standard output
@@ -67,8 +50,7 @@ end
 #    print(io, "MyType(name: ", x.name, ", value: ", x.value, ")")
 #end
 
-bt(flags, flag) = flags & flag != 0 ? true : false
-bt(P::MyPlan{T}, flag) where {T<:Number} = bt(P.flags, flag)
+include("plan.jl")
 
 function my_plan(S::Type, D::Type, x, region, flags)
     sx = size(x)
@@ -132,12 +114,12 @@ function mul!(y::Array{R,D}, P::MyPlan{S}, x::Array{T,E}) where {R<:Number,S<:Nu
     oy = zeros(eltype(ix), size(ix))
 
     if D == 1
-        do_fft(oy, ix, 0, bt(P, P_INVERSE))
+        execute_plan(P, oy, ix, 1)
     else
         soy = size(oy)
         ET = eltype(oy)
         for r in P.region
-            do_1d(oy, ix, 0, r, do_fft, bt(P, P_INVERSE))
+            do_fft_planned(P, oy, ix, r)
             ix = oy
         end
     end

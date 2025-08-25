@@ -15,7 +15,8 @@ function extended_euclid(a::Int, b::Int)
     (g, x - (b ÷ a) * y, y)
 end
 
-function prime_factor!(Y, X, e1, e2, N1, N2, fft1!, fft2!, inverse::Bool)
+function prime_factor!(Y::Vector{T}, X::Vector{T}, e1::Int, e2::Int, N1::Int, N2::Int,
+    fft1!::Function, fft2!::Function, inverse::Bool) where {T<:Complex}
     N = N1 * N2
     
     (g, M1, M2) = extended_euclid(N1, N2)
@@ -46,8 +47,8 @@ function prime_factor!(Y, X, e1, e2, N1, N2, fft1!, fft2!, inverse::Bool)
     Y2D_N1N2 = reshape(Y, (N1, N2))
     X2D_N1N2 = reshape(X, (N1, N2))
 
-    do_1d(X2D_N1N2, Y2D_N1N2, e2, 2, fft2!, inverse)
-    do_1d(Y2D_N1N2, X2D_N1N2, e1, 1, fft1!, inverse)
+    do_fft(X2D_N1N2, Y2D_N1N2, fft1!, e1, 1, inverse)
+    do_fft(Y2D_N1N2, X2D_N1N2, fft2!, e2, 2, inverse)
 
     Q2P = mod(M1, N2)
 
@@ -117,7 +118,8 @@ function kmap!(Y, X, N1, N2, N3, P1, P2)
     end
 end
 
-function prime_factor!(Y, X, e1, e2, e3, N1, N2, N3, fft1!, fft2!, fft3!, inverse::Bool)
+function prime_factor!(Y::Vector{T}, X::Vector{T}, e1::Int, e2::Int, e3::Int, N1::Int, N2::Int, N3::Int, 
+    fft1!::Function, fft2!::Function, fft3!::Function, inverse::Bool) where {T<:Complex}
     N = N1 * N2 * N3
     B = (p1, p2, p3, p4, Q1, Q2, Q3, Q4) = Qs(N1, N2, N3)
 
@@ -134,9 +136,9 @@ function prime_factor!(Y, X, e1, e2, e3, N1, N2, N3, fft1!, fft2!, fft3!, invers
     Y123 = reshape(Y, S123)
     X123 = reshape(X, S123)
 
-    do_1d(X123, Y123, e1, 1, fft1!, inverse)
-    do_1d(Y123, X123, e2, 2, fft2!, inverse)
-    do_1d(X123, Y123, e3, 3, fft3!, inverse)
+    do_fft(X123, Y123, fft1!, e1, 1, inverse)
+    do_fft(Y123, X123, fft2!, e2, 2, inverse)
+    do_fft(X123, Y123, fft3!, e3, 3, inverse)
 
     kmap!(Y, X, N1, N2, N3, P1, P2)
     Y, X

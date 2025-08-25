@@ -28,7 +28,6 @@ function reweight!(Y::Vector{T}, L, M, inverse::Bool=false) where {T<:Complex}
 end
 
 function mixed_radix!(Y, X, e1, e2, N1, N2, fft1!, fft2!, inverse::Bool=false)
-    # L*M matrix
     N = N1 * N2
 
     @assert length(X) == length(Y) "Y and X must be same size"
@@ -39,11 +38,11 @@ function mixed_radix!(Y, X, e1, e2, N1, N2, fft1!, fft2!, inverse::Bool=false)
     Y2D_LM = reshape(Y, (N1, N2))
     X2D_LM = reshape(X, (N1, N2))
 
-    do_1d(Y2D_LM, X2D_LM, e2, 2, fft2!, inverse)
+    do_fft(Y2D_LM, X2D_LM, fft2!, e2, 2, inverse)
 
     reweight!(Y, N1, N2, inverse)
 
-    do_1d(X2D_LM, Y2D_LM, e1, 1, fft1!, inverse)
+    do_fft(X2D_LM, Y2D_LM, fft1!, e1, 1, inverse)
 
     transpose!(Y2D_ML, X2D_LM)
     Y, X
@@ -109,16 +108,16 @@ function mixed_radix!(Y, X, e1, e2, e3, N1, N2, N3, fft1!, fft2!, fft3!, inverse
     X123 = reshape(X, S123)
     Y123 = reshape(Y, S123)
 
-    do_1d(Y123, X123, e3, 3, fft3!, inverse)
+    do_fft(Y123, X123, fft3!, e3, 3, inverse)
 
     mixed_radix_weight_2_of_3(Y123, Y, N2 * N3, N2, 1, inverse)
 
-    do_1d(X123, Y123, e2, 2, fft2!, inverse)
+    do_fft(X123, Y123, fft2!, e2, 2, inverse)
 
     mixed_radix_weight_2_of_3(X123, X, N1 * N2 * N3, N1, 2, inverse)
     mixed_radix_weight_2_of_3(X123, X, N1 * N2, N1, 3, inverse)
 
-    do_1d(Y123, X123, e1, 1, fft1!, inverse)
+    do_fft(Y123, X123, fft1!, e1, 1, inverse)
 
     X321 = reshape(X, (N3, N2, N1))
     permutedims!(X321, Y123, (3, 2, 1))

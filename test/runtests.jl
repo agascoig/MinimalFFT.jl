@@ -1,10 +1,3 @@
-
-
-import Base.@inbounds
-macro inbounds(ex)
-    esc(ex) # Disabled bounds checking
-end
-
 using Random
 using Test
 using AbstractFFTs
@@ -13,6 +6,7 @@ import Unitful
 using LinearAlgebra
 using ChainRulesCore
 using FiniteDifferences
+
 using MinimalFFT
 
 import Aqua
@@ -252,8 +246,6 @@ end
                     test_frule(*, pf(complex_x, dims), complex_x)
                     test_rrule(*, pf(complex_x, dims), complex_x)
 
-                    tbd0 = pf!(complex_x, dims)
-                    Δ * pf! * complex_x
                     @test_throws ArgumentError ChainRulesCore.frule(Δ, *, pf!(complex_x, dims), complex_x)
                     @test_throws ArgumentError ChainRulesCore.rrule(*, pf!(complex_x, dims), complex_x)
                 end
