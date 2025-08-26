@@ -110,16 +110,25 @@ function mul!(y::Array{R,D}, P::MyPlan{S}, x::Array{T,E}) where {R<:Number,S<:Nu
     rfft = !bt(P, P_INVERSE) && bt(P, P_REAL)
 
     # x was real only if not inplace: make complex
-    ix = complex(x)
-    oy = zeros(eltype(ix), size(ix))
+    if !(eltype(x) <: Complex)
+        ix = complex(x)
+    else
+        ix = copy(x)
+    end
+
+    if irfft || rfft        
+        oy = zeros(eltype(ix), size(ix))
+    else
+        oy = y
+    end
 
     if D == 1
-        execute_plan(P, oy, ix, 1)
+        oy, ix = execute_plan(P, oy, ix, 1)
     else
         soy = size(oy)
         ET = eltype(oy)
         for r in P.region
-            do_fft_planned(P, oy, ix, r)
+            oy, ix = do_fft_planned(P, oy, ix, r)
             ix = oy
         end
     end
@@ -129,7 +138,7 @@ function mul!(y::Array{R,D}, P::MyPlan{S}, x::Array{T,E}) where {R<:Number,S<:Nu
     elseif rfft
         rdim = first(P.region)
         y .= selectdim(oy, rdim, 1:out_N_rfft(P)) # truncate rfft output
-    else
+    elseif oy !== y
         y .= oy
     end
 

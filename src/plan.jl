@@ -11,11 +11,10 @@ const P_SCALED = 32
 
 # inner_plan for a region
 struct inner_plan
-    ns::Vector{Int64}
-    bases::Vector{Int64}
-    exponents::Vector{Int64}
-    funs::Vector{Function}
-    inner_plan() = new(Int64[],Int64[], Int64[], Function[])
+    ns::Int64
+    base::Int64
+    exp::Int64
+    fun::Function
 end
 
 mutable struct MyPlan{T} <: Plan{T}
@@ -23,13 +22,13 @@ mutable struct MyPlan{T} <: Plan{T}
     n::Tuple{Vararg{Int}} # Size of the FFT input     # required by AbstractFFTs
     region::Union{Int,UnitRange{Int}}     # required by AbstractFFTs
     flags::Int32 # bit vector of fft type
-    ipd::Dict{Int64,inner_plan} # region -> inner_plan
+    ipd::Dict{Int64,Vector{inner_plan}} # region -> inner_plan
 
     pinv::ScaledPlan # required by AbstractFFTs
 
     MyPlan{T}(D, n, region, flags) where {T} =
         begin
-            mp = new(D, n, region, flags, Dict{Int64,inner_plan}())
+            mp = new(D, n, region, flags, Dict{Int64,Vector{inner_plan}}())
             gen_plan(mp)
             mp
         end
