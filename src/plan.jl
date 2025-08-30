@@ -17,7 +17,7 @@ struct inner_plan
     fun::Function
 end
 
-mutable struct MyPlan{T} <: Plan{T}
+mutable struct MinimalPlan{T} <: Plan{T}
     D::Type # destination type, for real fft     # required by AbstractFFTs
     n::Tuple{Vararg{Int}} # Size of the FFT input     # required by AbstractFFTs
     region::Union{Int,UnitRange{Int}}     # required by AbstractFFTs
@@ -26,7 +26,7 @@ mutable struct MyPlan{T} <: Plan{T}
 
     pinv::ScaledPlan # required by AbstractFFTs
 
-    MyPlan{T}(D, n, region, flags) where {T} =
+    MinimalPlan{T}(D, n, region, flags) where {T} =
         begin
             mp = new(D, n, region, flags, Dict{Int64,Vector{inner_plan}}())
             gen_plan(mp)
@@ -35,4 +35,4 @@ mutable struct MyPlan{T} <: Plan{T}
 end
 
 bt(flags, flag) = flags & flag != 0 ? true : false
-bt(P::MyPlan{T}, flag) where {T<:Number} = bt(P.flags, flag)
+bt(P::MinimalPlan{T}, flag) where {T<:Number} = bt(P.flags, flag)

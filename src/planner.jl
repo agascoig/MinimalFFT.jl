@@ -52,31 +52,30 @@ function plan_1d(P, n, rd)
     end
 end
 
-function gen_plan(P::MyPlan{T}) where {T}
+function gen_plan(P::MinimalPlan{T}) where {T}
     for r in P.region
         plan_1d(P, P.n[r], r)
     end
 end
 
 # the output size is always the same as the input size here
-# y is output, x is unchanged
-function execute_plan(P::MyPlan{U}, y::Vector{S}, x::Vector{T}, r::Int) where {U,S<:Complex,T<:Complex}
+function execute_plan(P::MinimalPlan{U}, y::AbstractVector{S}, x::AbstractVector{T}, 
+    r::Int64) where {U,S<:Complex,T<:Complex}
     inverse = bt(P, P_INVERSE)
 
     ipv = P.ipd[r]
     lf = length(ipv)
     if lf == 1
-        y, x = ipv[1].fun(y, x, ipv[1].exp, inverse)
+        y, x = ipv[1].fun(y, x, 1, 1, length(x), ipv[1].exp, inverse)
     elseif lf < 4
         es = [a.exp for a in ipv]
         ns = [a.ns for a in ipv]
         fns = [a.fun for a in ipv]
-        inverse = bt(P, P_INVERSE)
         y, x = prime_factor!(y, x, es..., ns..., fns..., inverse)
     else
-        y, x = fft_bluestein!(y, x, 1, inverse)
+        y, x = fft_bluestein!(y, x, 1, 1, length(x), 0, inverse)
     end
 
-    y, x
+    (y, x)
 end
 

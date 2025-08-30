@@ -15,7 +15,8 @@ function extended_euclid(a::Int, b::Int)
     (g, x - (b ÷ a) * y, y)
 end
 
-function prime_factor!(Y::Vector{T}, X::Vector{T}, e1::Int, e2::Int, N1::Int, N2::Int,
+function prime_factor!(Y::AbstractVector{T}, X::AbstractVector{T}, 
+    e1::Int, e2::Int, N1::Int, N2::Int,
     fft1!::Function, fft2!::Function, inverse::Bool) where {T<:Complex}
     N = N1 * N2
     
@@ -47,9 +48,12 @@ function prime_factor!(Y::Vector{T}, X::Vector{T}, e1::Int, e2::Int, N1::Int, N2
     Y2D_N1N2 = reshape(Y, (N1, N2))
     X2D_N1N2 = reshape(X, (N1, N2))
 
-    do_fft(X2D_N1N2, Y2D_N1N2, fft1!, e1, 1, inverse)
-    do_fft(Y2D_N1N2, X2D_N1N2, fft2!, e2, 2, inverse)
+    X2D_N1N2, Y2D_N1N2 = do_fft(X2D_N1N2, Y2D_N1N2, fft1!, e1, 1, inverse)
+    Y2D_N1N2, X2D_N1N2 = do_fft(Y2D_N1N2, X2D_N1N2, fft2!, e2, 2, inverse)
 
+    Y = reshape(Y2D_N1N2, N)
+    X = reshape(X2D_N1N2, N)
+    
     Q2P = mod(M1, N2)
 
     lhs_k = 1
@@ -63,7 +67,7 @@ function prime_factor!(Y::Vector{T}, X::Vector{T}, e1::Int, e2::Int, N1::Int, N2
             lhs_k += 1
         end
     end
-    X, Y
+    (X, Y)
 end
 
 function Qs(N1::Int, N2::Int, N3::Int)
@@ -118,7 +122,7 @@ function kmap!(Y, X, N1, N2, N3, P1, P2)
     end
 end
 
-function prime_factor!(Y::Vector{T}, X::Vector{T}, e1::Int, e2::Int, e3::Int, N1::Int, N2::Int, N3::Int, 
+function prime_factor!(Y::AbstractVector{T}, X::AbstractVector{T}, e1::Int, e2::Int, e3::Int, N1::Int, N2::Int, N3::Int, 
     fft1!::Function, fft2!::Function, fft3!::Function, inverse::Bool) where {T<:Complex}
     N = N1 * N2 * N3
     B = (p1, p2, p3, p4, Q1, Q2, Q3, Q4) = Qs(N1, N2, N3)
@@ -136,10 +140,13 @@ function prime_factor!(Y::Vector{T}, X::Vector{T}, e1::Int, e2::Int, e3::Int, N1
     Y123 = reshape(Y, S123)
     X123 = reshape(X, S123)
 
-    do_fft(X123, Y123, fft1!, e1, 1, inverse)
-    do_fft(Y123, X123, fft2!, e2, 2, inverse)
-    do_fft(X123, Y123, fft3!, e3, 3, inverse)
+    X123, Y123 = do_fft(X123, Y123, fft1!, e1, 1, inverse)
+    Y123, X123 = do_fft(Y123, X123, fft2!, e2, 2, inverse)
+    X123, Y123 = do_fft(X123, Y123, fft3!, e3, 3, inverse)
+
+    Y = reshape(Y123, N)
+    X = reshape(X123, N)
 
     kmap!(Y, X, N1, N2, N3, P1, P2)
-    Y, X
+    (Y, X)
 end

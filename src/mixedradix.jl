@@ -2,7 +2,7 @@
 
 import LinearAlgebra: transpose!
 
-function reweight!(Y::Vector{T}, L, M, inverse::Bool=false) where {T<:Complex}
+function reweight!(Y::AbstractVector{T}, L, M, inverse::Bool=false) where {T<:Complex}
     # L: num rows, M: num columns
     N = L * M
     @assert N == length(Y) "Lengths must be consistent length(Y)=$(length(Y)) N=$N=$L*$M."
@@ -33,25 +33,31 @@ function mixed_radix!(Y, X, e1, e2, N1, N2, fft1!, fft2!, inverse::Bool=false)
     @assert length(X) == length(Y) "Y and X must be same size"
     @assert N == length(X) "Incorrect rectangular decomposition, N=$N L=$L M=$M"
 
-    Y2D_ML = reshape(Y, (N2, N1))
-    X2D_ML = reshape(X, (N2, N1))
     Y2D_LM = reshape(Y, (N1, N2))
     X2D_LM = reshape(X, (N1, N2))
 
-    do_fft(Y2D_LM, X2D_LM, fft2!, e2, 2, inverse)
+    Y2D_LM, X2D_LM = do_fft(Y2D_LM, X2D_LM, fft2!, e2, 2, inverse)
 
-    reweight!(Y, N1, N2, inverse)
+    reweight!(reshape(Y2D_LM,N), N1, N2, inverse)
 
-    do_fft(X2D_LM, Y2D_LM, fft1!, e1, 1, inverse)
+    X2D_LM, Y2D_LM = do_fft(X2D_LM, Y2D_LM, fft1!, e1, 1, inverse)
+
+    Y2D_ML = reshape(Y2D_LM, (N2, N1))
+    X2D_LM = reshape(X2D_LM, (N1, N2))
 
     transpose!(Y2D_ML, X2D_LM)
+
+    Y = reshape(Y2D_ML, N)
+    X = reshape(X2D_LM, N)
+
     Y, X
 end
 
-function mixed_radix_weight_2_of_3(y3d, y, N, L, d, inverse::Bool=false)
+function mixed_radix_weight_2_of_3(y3d, N, L, d, inverse::Bool=false)
     # the weight is the same for all elements along d
     # L is inner dimension
     dp = 0
+    y = reshape(y3d, length(y3d))
 
     nd = ndims(y3d)
     soy = size(y3d)
@@ -103,24 +109,30 @@ function mixed_radix_weight_2_of_3(y3d, y, N, L, d, inverse::Bool=false)
 end
 
 function mixed_radix!(Y, X, e1, e2, e3, N1, N2, N3, fft1!, fft2!, fft3!, inverse::Bool=false)
+    N = N1 * N2 * N3
     S123 = (N1, N2, N3)
 
     X123 = reshape(X, S123)
     Y123 = reshape(Y, S123)
 
-    do_fft(Y123, X123, fft3!, e3, 3, inverse)
+    Y123, X123 = do_fft(Y123, X123, fft3!, e3, 3, inverse)
 
-    mixed_radix_weight_2_of_3(Y123, Y, N2 * N3, N2, 1, inverse)
+    mixed_radix_weight_2_of_3(Y123, N2 * N3, N2, 1, inverse)
 
-    do_fft(X123, Y123, fft2!, e2, 2, inverse)
+    X123, Y123 = do_fft(X123, Y123, fft2!, e2, 2, inverse)
 
-    mixed_radix_weight_2_of_3(X123, X, N1 * N2 * N3, N1, 2, inverse)
-    mixed_radix_weight_2_of_3(X123, X, N1 * N2, N1, 3, inverse)
+    mixed_radix_weight_2_of_3(X123, N1 * N2 * N3, N1, 2, inverse)
+    mixed_radix_weight_2_of_3(X123, N1 * N2, N1, 3, inverse)
 
-    do_fft(Y123, X123, fft1!, e1, 1, inverse)
+    Y123, X123 = do_fft(Y123, X123, fft1!, e1, 1, inverse)
 
-    X321 = reshape(X, (N3, N2, N1))
+    X321 = reshape(X123, (N3, N2, N1))
+
     permutedims!(X321, Y123, (3, 2, 1))
+
+    Y = reshape(Y123, N)
+    X = reshape(X123, N)
+
     X, Y
 end
 
