@@ -63,17 +63,19 @@ function execute_plan(P::MinimalPlan{U}, y::AbstractVector{S}, x::AbstractVector
     r::Int64) where {U,S<:Complex,T<:Complex}
     inverse = bt(P, P_INVERSE)
 
-    ipv = P.ipd[r]
-    lf = length(ipv)
-    if lf == 1
-        y, x = ipv[1].fun(y, x, 1, 1, length(x), ipv[1].exp, inverse)
-    elseif lf < 4
-        es = [a.exp for a in ipv]
-        ns = [a.ns for a in ipv]
-        fns = [a.fun for a in ipv]
-        y, x = prime_factor!(y, x, es..., ns..., fns..., inverse)
-    else
-        y, x = fft_bluestein!(y, x, 1, 1, length(x), 0, inverse)
+    @inbounds begin
+        ipv = P.ipd[r]
+        lf = length(ipv)
+        if lf == 1
+            y, x = ipv[1].fun(y, x, 1, 1, ipv[1].ns, ipv[1].exp, inverse)
+        elseif lf==2
+            y, x = prime_factor!(y, x, ipv[1].exp, ipv[2].exp, ipv[1].ns, ipv[2].ns, ipv[1].fun, ipv[2].fun, inverse)
+        elseif lf==3
+            y, x = prime_factor!(y, x, ipv[1].exp, ipv[2].exp, ipv[3].exp,
+            ipv[1].ns, ipv[2].ns, ipv[3].ns, ipv[1].fun, ipv[2].fun, ipv[3].fun, inverse)
+        else
+            y, x = fft_bluestein!(y, x, 1, 1, ipv[1].ns, 0, inverse)
+        end
     end
 
     (y, x)

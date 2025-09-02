@@ -10,8 +10,10 @@ end
 
 using FFTW
 using MinimalFFT
+using BenchmarkTools
 using Infiltrator
 Random.seed!(6502)
+BenchmarkTools.DEFAULT_PARAMETERS.samples = 10
 
 fn_dict = Dict(2 => MinimalFFT.fftr2!,
     3 => MinimalFFT.fftr3!,
@@ -39,23 +41,21 @@ function power_of(b::Int, N::Int)::Int64
     0
 end
 
-const REPEAT_TEST = 3
-
 function stockham(Y, X, fn1, base)
     N = length(X)
-    Y, X = fn1(Y, X, 1, 1, N, Int64(round(log(base,N))), false)
+    Y, X = fn1(Y, X, 1, 1, N, Int64(round(log(base, N))), false)
     Y, X
 end
 
 function stockham_inv(Y, X, fn1, base)
     N = length(X)
 
-    Y, X = fn1(Y, X, 1, 1, N, Int64(round(log(base,N))), true)
-    Y .*= (1.0/N)
+    Y, X = fn1(Y, X, 1, 1, N, Int64(round(log(base, N))), true)
+    Y .*= (1.0 / N)
     Y, X
 end
 
-function test_fft(name, N, pc::Ref{Int64}, fc::Ref{Int64}, fn1::Function, 
+function test_fft(name, bm, N, pc::Ref{Int64}, fc::Ref{Int64}, fn1::Function,
     P::Union{Nothing,MinimalFFT.MinimalPlan{T},MinimalFFT.ScaledPlan{T}},
     args::Any...) where {T}
 
@@ -63,61 +63,65 @@ function test_fft(name, N, pc::Ref{Int64}, fc::Ref{Int64}, fn1::Function,
     Y = zeros(ComplexF64, N)
     X_ref = randn(ComplexF64, N)
     X = copy(X_ref)
-
-    rfftw_time = zeros(Float64, REPEAT_TEST)
-    r_time = zeros(Float64, REPEAT_TEST)
-
-    any_failed = false
+    copy_X = copy(X)
 
     do_inv = fn1 === stockham_inv
 
-    for i = 1:REPEAT_TEST
-        if P!==nothing
-            ip = P
-            if P isa MinimalFFT.ScaledPlan
-                ip = P.p
-            end
-            do_inv = MinimalFFT.bt(ip.flags, MinimalFFT.P_INVERSE)
+    if P !== nothing
+        ip = P
+        if P isa MinimalFFT.ScaledPlan
+            ip = P.p
         end
-
-        P_ref = do_inv ? FFTW.inv(FFTW.plan_fft(X_ref)) : FFTW.plan_fft(X_ref)
-
-        if P_ref isa AbstractFFTs.ScaledPlan
-            @assert P_ref.p isa FFTW.cFFTWPlan "Reference plan must be FFTW.cFFTWPlan"
-        else
-            @assert P_ref isa FFTW.cFFTWPlan "Reference plan must be FFTW.cFFTWPlan"
-        end
-
-        result_ref = @timed P_ref * X_ref
-        Y_ref = result_ref.value
-        t_ref = result_ref.time
-
-        t = 0.0
-        
-        if P !== nothing
-            result = @timed P * X
-            Y = result.value
-            t = result.time
-            @assert X ≈ X_ref "MinimalFFT modified input." # TBD: allow for inplace
-        else
-            result = @timed fn1(Y, copy(X), args...)
-            Y = result.value[1]
-            t = result.time
-        end
-
-        if !(Y ≈ Y_ref) && !any_failed
-            println("Failed for $name: N=$N error=", sum(abs.(Y - Y_ref)), " args=$args")
-            any_failed = true
-        end
-
-        rfftw_time[i] = t_ref
-        r_time[i] = t
+        do_inv = MinimalFFT.bt(ip.flags, MinimalFFT.P_INVERSE)
     end
 
-    if any_failed
+    P_ref = do_inv ? FFTW.inv(FFTW.plan_fft(X_ref)) : FFTW.plan_fft(X_ref)
+
+    if P_ref isa AbstractFFTs.ScaledPlan
+        @assert P_ref.p isa FFTW.cFFTWPlan "Reference plan must be FFTW.cFFTWPlan"
+    else
+        @assert P_ref isa FFTW.cFFTWPlan "Reference plan must be FFTW.cFFTWPlan"
+    end
+
+    if bm
+        result_ref = @btimed $P_ref * copy($X_ref)
+        Y_ref = result_ref.value
+        t_ref = result_ref.time
+    else
+        Y_ref = P_ref * copy(X_ref)
+        t_ref = 1.0
+    end
+
+    t = 1.0
+
+    if P !== nothing
+        if bm
+            result = @btimed $P * copy($X)
+            Y = result.value
+            t = result.time
+        else
+            Y = P * X
+        end
+        @assert X ≈ X_ref "MinimalFFT modified input." # TBD: allow for inplace
+    else
+        if bm
+            result = @btimed $fn1($Y, copy($X), $args...)
+            Y = result.value[1]
+            t = result.time
+        else
+            Y, X = fn1(Y, X, args...)
+        end
+    end
+
+    if !(Y ≈ Y_ref)
+        println("Failed for $name: N=$N error=", sum(abs.(Y - Y_ref)), " args=$args")
         fc[] += 1
     else
-        println("Passed for $name: N=$N= time=", @sprintf("%.8f", minimum(r_time)), " args=$args", " factor_ref=", @sprintf("%.3f", minimum(r_time) / minimum(rfftw_time)))
+        if bm
+            println("Passed for $name: N=$N= time=", " args=$args", " factor_ref=", @sprintf("%.3f", t / t_ref))
+        else
+            println("Passed for $name: N=$N args=$args")
+        end
         pc[] += 1
     end
 end
@@ -148,10 +152,10 @@ function driver(radix::Vector{Int64}, pc::Ref{Int64}, fc::Ref{Int64},
         end
 
         if length(NF) == 1
-            test_fft(name, prod(NF), pc, fc, parent_fn, nothing, fns[1], bs[1]) # stockham
+            test_fft(name, false, prod(NF), pc, fc, parent_fn, nothing, fns[1], bs[1]) # stockham
         else
             # prime_factor! or mixed_radix!
-            test_fft(name, prod(NF), pc, fc, parent_fn, nothing, es..., NF..., fns..., false)
+            test_fft(name, false, prod(NF), pc, fc, parent_fn, nothing, es..., NF..., fns..., false)
         end
     end
 end
@@ -175,20 +179,20 @@ function do_tests()
     pc = Ref{Int64}(0)
     fc = Ref{Int64}(0)
 
-    driver([2,3,5,7], pc, fc, stockham, factor_1, "stockham test 1")
-    driver([2,9,5,7], pc, fc, stockham, factor_1, "stockham test 2")
-    driver([4,3,5,7], pc, fc, stockham, factor_1, "stockham test 3")
-    driver([4,9,5,7], pc, fc, stockham, factor_1, "stockham test 4")
-    driver([8,3,5,7], pc, fc, stockham, factor_1, "stockham test 5")
-    driver([8,9,5,7], pc, fc, stockham, factor_1, "stockham test 6")
+    driver([2, 3, 5, 7], pc, fc, stockham, factor_1, "stockham test 1")
+    driver([2, 9, 5, 7], pc, fc, stockham, factor_1, "stockham test 2")
+    driver([4, 3, 5, 7], pc, fc, stockham, factor_1, "stockham test 3")
+    driver([4, 9, 5, 7], pc, fc, stockham, factor_1, "stockham test 4")
+    driver([8, 3, 5, 7], pc, fc, stockham, factor_1, "stockham test 5")
+    driver([8, 9, 5, 7], pc, fc, stockham, factor_1, "stockham test 6")
 
-    driver([2,3,5,7], pc, fc, stockham_inv, factor_1, "stockham inverse test 1")
-    driver([2,9,5,7], pc, fc, stockham_inv, factor_1, "stockham inverse test 2")
-    driver([4,3,5,7], pc, fc, stockham_inv, factor_1, "stockham inverse test 3")
-    driver([4,9,5,7], pc, fc, stockham_inv, factor_1, "stockham inverse test 4")
-    driver([8,3,5,7], pc, fc, stockham_inv, factor_1, "stockham inverse test 5")
-    driver([8,9,5,7], pc, fc, stockham_inv, factor_1, "stockham inverse test 6")
-    
+    driver([2, 3, 5, 7], pc, fc, stockham_inv, factor_1, "stockham inverse test 1")
+    driver([2, 9, 5, 7], pc, fc, stockham_inv, factor_1, "stockham inverse test 2")
+    driver([4, 3, 5, 7], pc, fc, stockham_inv, factor_1, "stockham inverse test 3")
+    driver([4, 9, 5, 7], pc, fc, stockham_inv, factor_1, "stockham inverse test 4")
+    driver([8, 3, 5, 7], pc, fc, stockham_inv, factor_1, "stockham inverse test 5")
+    driver([8, 9, 5, 7], pc, fc, stockham_inv, factor_1, "stockham inverse test 6")
+
     driver([2, 3, 5, 7], pc, fc, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 1")
     driver([4, 3, 5, 7], pc, fc, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 2")
     driver([8, 3, 5, 7], pc, fc, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 3")
@@ -226,8 +230,8 @@ function do_tests()
         P = MinimalFFT.MinimalPlan{ComplexF64}(ComplexF64, (n,), 1, MinimalFFT.P_NONE)
         Pinv = MinimalFFT.inv(P)
 
-        test_fft("execute_plan", n, pc, fc, MinimalFFT.execute_plan, P, 1) # planner_do_fft
-        test_fft("execute_plan inverse", n, pc, fc, MinimalFFT.execute_plan, Pinv, 1) # planner_do_fft inverse
+        test_fft("execute_plan", true, n, pc, fc, MinimalFFT.execute_plan, P, 1) # planner_do_fft
+        test_fft("execute_plan inverse", true, n, pc, fc, MinimalFFT.execute_plan, Pinv, 1) # planner_do_fft inverse
     end
 
     println("$(pc[]) tests passed.")
@@ -236,5 +240,16 @@ end
 
 today_str = Dates.format(Dates.today(), "yyyymmdd")
 time_str = Dates.format(Dates.now(), "HHMMSS")
-do_tests()
-#@write_fn("../tmp/test17_$today_str" * "_" * "$time_str.txt", do_tests())
+#do_tests()
+@write_fn("../tmp/test17_$today_str" * "_" * "$time_str.txt", do_tests())
+
+function profiler()
+    n = 56
+    pc = Ref{Int64}(0)
+    fc = Ref{Int64}(0)
+    P = MinimalFFT.MinimalPlan{ComplexF64}(ComplexF64, (n,), 1, MinimalFFT.P_NONE)
+    test_fft("execute_plan", false, n, pc, fc, MinimalFFT.execute_plan, P, 1)
+end
+
+#@profview profiler()
+

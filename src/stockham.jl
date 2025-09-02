@@ -12,10 +12,10 @@ function fftr2!(Y::AbstractVector{T}, X::AbstractVector{T},
 
     u = 2 * pi / 2
 
-    r = inverse ? u : -u
+    pmim = inverse ? 1.0im : -1.0im
 
     for t = 1:e1
-        w_l = exp(im * r / l)
+        w_l = exp(pmim * u / l)
         w = one(T)
         for j = 0:l-1
             for k = 0:m-1
@@ -44,7 +44,7 @@ function fftr3!(Y::AbstractVector{T}, X::AbstractVector{T},
     c31 = sin(pi / 3)
 
     r = inverse ? u : -u
-    pmone = inverse ? 1 : -1
+    pmim = inverse ? 1.0im : -1.0im
 
     for t = 1:e1
         w_l = exp(im * r / l)
@@ -56,7 +56,7 @@ function fftr3!(Y::AbstractVector{T}, X::AbstractVector{T},
                 c2 = @inbounds X[bp+stride*(k+j*m+2*l*m)]
                 d0 = c1 + c2
                 d1 = c0 - c30 * d0
-                d2 = pmone * im * c31 * (c1 - c2)
+                d2 = pmim * c31 * (c1 - c2)
                 @inbounds Y[bp+stride*(k+3*j*m)] = c0 + d0
                 @inbounds Y[bp+stride*(k+3*j*m+m)] = w * (d1 + d2)
                 @inbounds Y[bp+stride*(k+3*j*m+2*m)] = w * w * (d1 - d2)
@@ -78,7 +78,7 @@ function fftr4!(Y::AbstractVector{T}, X::AbstractVector{T},
     u = 2 * pi / 4
 
     r = inverse ? u : -u
-    pmone = inverse ? 1 : -1
+    pmim = inverse ? 1.0im : -1.0im
 
     for t = 1:e1
         w_l = exp(im * r / l)
@@ -93,7 +93,7 @@ function fftr4!(Y::AbstractVector{T}, X::AbstractVector{T},
                 d1 = c0 - c2
                 d2 = c1 + c3
                 d3 = c1 - c3
-                d3 = pmone * im * d3
+                d3 = pmim * d3
                 @inbounds Y[bp+stride*(k + 4 * j * m)] = d0 + d2
                 @inbounds Y[bp+stride*(k + 4 * j * m + m)] = w * (d1 + d3)
                 @inbounds Y[bp+stride*(k + 4 * j * m + 2 * m)] = w * w * (d0 - d2)
@@ -121,7 +121,7 @@ function fftr5!(Y::AbstractVector{T}, X::AbstractVector{T},
     c53 = (sin(pi / 5.0) / sin(2.0 * pi / 5.0))
 
     r = inverse ? u : -u
-    pmone = inverse ? 1 : -1
+    pmim = inverse ? 1.0im : -1.0im
 
     for t = 1:e1
         w_l = exp(im * r / l)
@@ -142,8 +142,8 @@ function fftr5!(Y::AbstractVector{T}, X::AbstractVector{T},
                 d6 = c0 - c50 * d4
                 d7 = d6 + d5
                 d8 = d6 - d5
-                d9 = pmone * im * (d2 + c53 * d3)
-                d10 = pmone * im * (c53 * d2 - d3)
+                d9 = pmim * (d2 + c53 * d3)
+                d10 = pmim * (c53 * d2 - d3)
                 @inbounds Y[bp + stride*(k+5*j*m)] = c0 + d4
                 @inbounds Y[bp + stride*(k+5*j*m+m)] = w * (d7 + d9)
                 @inbounds Y[bp + stride*(k+5*j*m+2*m)] = w * w * (d8 + d10)
@@ -176,7 +176,7 @@ function fftr7!(Y::AbstractVector{T}, X::AbstractVector{T},
     c78 = (sin(u) + sin(2u) + 2sin(3u)) / 3
 
     r = inverse ? u : -u
-    pmone = inverse ? 1 : -1
+    pmim = inverse ? 1.0im : -1.0im
 
     for t = 1:e1
         w_l = exp(im * r / l)
@@ -211,10 +211,10 @@ function fftr7!(Y::AbstractVector{T}, X::AbstractVector{T},
                 m2 = c72 * a8
                 m3 = c73 * a9
                 m4 = c74 * a10
-                m5 = -pmone * im * (c75 * a11)
-                m6 = -pmone * im * (c76 * a12)
-                m7 = -pmone * im * (c77 * a13)
-                m8 = -pmone * im * (c78 * a14)
+                m5 = -pmim * (c75 * a11)
+                m6 = -pmim * (c76 * a12)
+                m7 = -pmim * (c77 * a13)
+                m8 = -pmim * (c78 * a14)
 
                 x1 = c0 - m1
                 x2 = x1 + m2 + m3
@@ -252,7 +252,7 @@ function fftr8!(Y::AbstractVector{T}, X::AbstractVector{T},
     c82 = -(sqrt(2) / 2)
 
     r = inverse ? u : -u
-    pmone = inverse ? 1 : -1
+    pmim = inverse ? 1.0im : -1.0im
 
     for t = 1:e1
         w_l = exp(im * r / l)
@@ -270,7 +270,7 @@ function fftr8!(Y::AbstractVector{T}, X::AbstractVector{T},
                 d0 = c0 + c4
                 d1 = c0 - c4
                 d2 = c2 + c6
-                d3 = pmone * im * (c2 - c6)
+                d3 = pmim * (c2 - c6)
                 d4 = c1 + c5
                 d5 = c1 - c5
                 d6 = c3 + c7
@@ -278,9 +278,9 @@ function fftr8!(Y::AbstractVector{T}, X::AbstractVector{T},
                 e0 = d0 + d2
                 e1 = d0 - d2
                 e2 = d4 + d6
-                e3 = pmone * im * (d4 - d6)
+                e3 = pmim * (d4 - d6)
                 e4 = c81 * (d5 - d7)
-                e5 = -pmone * im * c82 * (d5 + d7)
+                e5 = -pmim * c82 * (d5 + d7)
                 e6 = d1 + e4
                 e7 = d1 - e4
                 e8 = d3 + e5
@@ -323,7 +323,7 @@ function fftr9!(Y::AbstractVector{T}, X::AbstractVector{T},
     s4u = sin(4u)
 
     r = inverse ? u : -u
-    pmone = inverse ? 1 : -1
+    pmim = inverse ? 1.0im : -1.0im
 
     for t = 1:e1
         w_l = exp(im * r / l)
@@ -367,13 +367,13 @@ function fftr9!(Y::AbstractVector{T}, X::AbstractVector{T},
                 s0 = -m3 - m4
                 s1 = m5 - m4
 
-                m6 = pmone * im * s3u * t10
-                m7 = pmone * im * s3u * t8
+                m6 = pmim * s3u * t10
+                m7 = pmim * s3u * t8
 
                 t16 = -t13 + t14
-                m8 = -pmone * im * su * t13
-                m9 = -pmone * im * s4u * t14
-                m10 = -pmone * im * s2u * t16
+                m8 = -pmim * su * t13
+                m9 = -pmim * s4u * t14
+                m10 = -pmim * s2u * t16
 
                 s2 = -m8 - m9
                 s3 = m9 - m10

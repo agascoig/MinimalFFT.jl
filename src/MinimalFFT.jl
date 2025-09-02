@@ -111,7 +111,7 @@ function mul!(y::Array{R,D}, P::MinimalPlan{S}, x::Array{T,E}) where {R<:Number,
 
     # x was real only if not inplace: make complex
     ix = eltype(x) <: Complex ? copy(x) : complex(x)
-    oy = irfft || rfft ? zeros(eltype(ix), size(ix)) : y
+    oy = irfft || rfft ? Array{eltype(ix)}(undef, size(ix)) : y
 
     if D == 1
         oy, ix = execute_plan(P, oy, ix, 1)
@@ -186,7 +186,7 @@ end
 
 function output_buffer(P::MinimalPlan{T}) where {T<:Number}
     s = get_output_size(P)
-    zeros(P.D, s)
+    Array{T}(undef, s)
 end
 
 # * operator
