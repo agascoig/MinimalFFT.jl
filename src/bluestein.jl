@@ -35,7 +35,6 @@ function fft_bluestein!(y::AbstractVector{T}, x::AbstractVector{T},
         for i = 1:N
             y[bp+stride*(i-1)] *= B_X[i]
         end
-
-    end
     y, x
+    end
 end

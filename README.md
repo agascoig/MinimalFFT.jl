@@ -31,7 +31,8 @@ Adjoint plan on single-precision |    3      3  0.6s
 Test Summary:                                                  | Pass  Total  Time
 Adjoint plan application when plan inverse is not a ScaledPlan |    3      3  0.1s
 
-Note: ChainRules tests do not currently pass.
+Note: ChainRules tests do not currently pass.  This is due to
+its attempt to fuzz the FFT plan.
 
 ```
 
@@ -52,31 +53,37 @@ is the data type.)
 ```
 Benchmark Procedure:
 
-julia> using MinimalFFT, BenchmarkTools
-
-julia> N=1<<20;x=randn(N)+1.0im*randn(N);
-
-julia> P=plan_fft(x);
-
-julia> @btime (P * x);
+using MinimalFFT, BenchmarkTools
+N=1<<20;x=randn(N)+1.0im*randn(N);
+P=plan_fft(x);
+@btime (P * x);
 ```
 
 These were obtained on an Apple Mac Mini M4 Pro processor.
 
-Performance was significantly better (7x) with a Stockham-style radix-2 FFT than a Cooley-Tukey algorithm, probably due to less memory conflicts (no need to do bit reversal or load/store conflicts), prefetching, or better vectorization.  Without a real planner, the performance for small block sizes or non-power of two sizes is much worse than FFTW since the Bluestein algorithm is always being used, and always with a radix-2 backend.
+Performance was significantly better (7x) with a Stockham-style radix-2 FFT than a
+Cooley-Tukey algorithm, probably due to less memory conflicts (no need to do bit reversal
+or load/store conflicts), prefetching, or better vectorization.
+
+test/test17.jl shows planned performance comparisons with FFTW.  For small block sizes,
+the performance is much worse than FFTW.  Larger block sizes are approximately twice
+as slow as FFTW.
+
+Attempts to improve performance by pre-allocating buffers failed.  Of course, the
+stockham.jl routines could be recoded in assembly language to speed things up.
+
+The Rader algorithm is slow, but is included for reference, as it is similar to the Winograd
+decomposition for generating butterfly operations.
 
 ![](./bench/small_block.svg)
 
 ![](./bench/large_block.svg)
 
-I am planning, pun intended, to get insight from the RustFFT project
-to implement a planner.
-
 ## Prime Factor Algorithm
 
-A modern approach to the FFT is to use the Prime Factor Algorithm with CTA for each radix.
-
-I am now implementing this.
+A modern approach to the FFT is to use the Prime Factor Algorithm with CTA for each radix, which
+is done by this package.  The code uses a non-standard scrambling/descrambling instead of Good-CRT
+with lookup table.  See these documents for a summary:
 
 [PFA 2 decomposition](https://agascoig.github.io/MinimalFFT.jl/pfa2.html)
 

@@ -118,7 +118,7 @@ function test_fft(name, bm, N, pc::Ref{Int64}, fc::Ref{Int64}, fn1::Function,
         fc[] += 1
     else
         if bm
-            println("Passed for $name: N=$N= time=", " args=$args", " factor_ref=", @sprintf("%.3f", t / t_ref))
+            println("Passed for $name: N=$N= time=$t", " args=$args", " factor_ref=", @sprintf("%.3f", t / t_ref))
         else
             println("Passed for $name: N=$N args=$args")
         end
