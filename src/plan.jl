@@ -28,6 +28,9 @@ mutable struct MinimalPlan{T} <: Plan{T}
 
     MinimalPlan{T}(D, n, region, flags) where {T} =
         begin
+            if !(D <: AbstractFloat) || (D <: Complex && !(real(D) <: AbstractFloat))
+                D=float(D)
+            end
             mp = new(D, n, region, flags, Dict{Int64,Vector{inner_plan}}())
             gen_plan(mp)
             mp

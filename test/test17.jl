@@ -1,13 +1,6 @@
 
 using Primes, FFTW, Random, Printf, Dates
 
-#=
-import Base.@inbounds
-macro inbounds(ex)
-    esc(ex) # Enables bounds checking
-end
-=#
-
 using FFTW
 using MinimalFFT
 using BenchmarkTools
@@ -41,21 +34,13 @@ function power_of(b::Int, N::Int)::Int64
     0
 end
 
-function stockham(Y, X, fn1, base)
+function stockham(Y, X, fn1, exponent, inverse)
     N = length(X)
-    Y, X = fn1(Y, X, 1, 1, N, Int64(round(log(base, N))), false)
+    Y, X = fn1(Y, X, N, exponent, 1, 1, inverse)
     Y, X
 end
 
-function stockham_inv(Y, X, fn1, base)
-    N = length(X)
-
-    Y, X = fn1(Y, X, 1, 1, N, Int64(round(log(base, N))), true)
-    Y .*= (1.0 / N)
-    Y, X
-end
-
-function test_fft(name, bm, N, pc::Ref{Int64}, fc::Ref{Int64}, fn1::Function,
+function test_fft(name::String, bm::Bool, inverse::Bool, N::Int64, pc::Ref{Int64}, fc::Ref{Int64}, fn1::Function,
     P::Union{Nothing,MinimalFFT.MinimalPlan{T},MinimalFFT.ScaledPlan{T}},
     args::Any...) where {T}
 
@@ -65,17 +50,7 @@ function test_fft(name, bm, N, pc::Ref{Int64}, fc::Ref{Int64}, fn1::Function,
     X = copy(X_ref)
     copy_X = copy(X)
 
-    do_inv = fn1 === stockham_inv
-
-    if P !== nothing
-        ip = P
-        if P isa MinimalFFT.ScaledPlan
-            ip = P.p
-        end
-        do_inv = MinimalFFT.bt(ip.flags, MinimalFFT.P_INVERSE)
-    end
-
-    P_ref = do_inv ? FFTW.inv(FFTW.plan_fft(X_ref)) : FFTW.plan_fft(X_ref)
+    P_ref = inverse ? FFTW.inv(FFTW.plan_fft(X_ref)) : FFTW.plan_fft(X_ref)
 
     if P_ref isa AbstractFFTs.ScaledPlan
         @assert P_ref.p isa FFTW.cFFTWPlan "Reference plan must be FFTW.cFFTWPlan"
@@ -87,29 +62,34 @@ function test_fft(name, bm, N, pc::Ref{Int64}, fc::Ref{Int64}, fn1::Function,
         result_ref = @btimed $P_ref * copy($X_ref)
         Y_ref = result_ref.value
         t_ref = result_ref.time
-    else
-        Y_ref = P_ref * copy(X_ref)
-        t_ref = 1.0
-    end
+        t = 1.0
 
-    t = 1.0
-
-    if P !== nothing
-        if bm
+        if P !== nothing
             result = @btimed $P * copy($X)
             Y = result.value
             t = result.time
+            @assert X ≈ X_ref "MinimalFFT modified input." # TBD: allow for inplace
         else
-            Y = P * X
-        end
-        @assert X ≈ X_ref "MinimalFFT modified input." # TBD: allow for inplace
-    else
-        if bm
             result = @btimed $fn1($Y, copy($X), $args...)
             Y = result.value[1]
             t = result.time
+            if inverse
+                Y .*= (1.0 / N)
+            end
+        end
+    else
+        Y_ref = P_ref * copy(X_ref)
+        t_ref = 1.0
+        t = 1.0
+
+        if P !== nothing
+            Y = P * X
+            @assert X ≈ X_ref "MinimalFFT modified input." # TBD: allow for inplace
         else
             Y, X = fn1(Y, X, args...)
+            if inverse
+                Y .*= (1.0 / N)
+            end
         end
     end
 
@@ -118,7 +98,7 @@ function test_fft(name, bm, N, pc::Ref{Int64}, fc::Ref{Int64}, fn1::Function,
         fc[] += 1
     else
         if bm
-            println("Passed for $name: N=$N= time=$t", " args=$args", " factor_ref=", @sprintf("%.3f", t / t_ref))
+            println("Passed for $name: N=$N time=", @sprintf("%.2e",t) , " args=$args", " factor_ref=", @sprintf("%.3f", t / t_ref))
         else
             println("Passed for $name: N=$N args=$args")
         end
@@ -126,7 +106,7 @@ function test_fft(name, bm, N, pc::Ref{Int64}, fc::Ref{Int64}, fn1::Function,
     end
 end
 
-function driver(radix::Vector{Int64}, pc::Ref{Int64}, fc::Ref{Int64},
+function driver(radix::Vector{Int64}, pc::Ref{Int64}, fc::Ref{Int64}, inverse::Bool,
     parent_fn::Function, N_vals::Vector{Vector{Int64}}, name::String)
 
     for NF in N_vals
@@ -152,10 +132,10 @@ function driver(radix::Vector{Int64}, pc::Ref{Int64}, fc::Ref{Int64},
         end
 
         if length(NF) == 1
-            test_fft(name, false, prod(NF), pc, fc, parent_fn, nothing, fns[1], bs[1]) # stockham
+            test_fft(name, false, inverse, prod(NF), pc, fc, parent_fn, nothing, fns[1], es[1], inverse) # stockham
         else
             # prime_factor! or mixed_radix!
-            test_fft(name, false, prod(NF), pc, fc, parent_fn, nothing, es..., NF..., fns..., false)
+            test_fft(name, false, inverse, prod(NF), pc, fc, parent_fn, nothing, es..., NF..., fns..., 1, 1, inverse)
         end
     end
 end
@@ -167,59 +147,62 @@ function do_tests()
     t = Dates.format(Dates.now(), "HH:MM:SS")
     println("# $day time: $t\n\n")
     factor_1 = [[8], [25], [27], [16], [125], [49], [64], [81], [256]]
-    factor_2 = [[4, 25], [25, 4], [4, 49], [49, 4], [8, 9], [9, 8], [256, 25], [25, 256],
-        [16, 5], [5, 16], [8, 7], [7, 8], [4, 25], [25, 4], [3, 49], [49, 3], [8, 9], [9, 8],
-        [256, 25], [25, 256], [16, 5], [5, 16], [8, 7], [7, 8],
-        [25, 4]]
-    factor_3 = [[9, 5, 49], [9, 49, 5], [5, 9, 49], [5, 49, 9], [49, 9, 5], [49, 5, 9], [8, 25, 7],
-        [8, 7, 25], [25, 8, 7], [25, 7, 8], [7, 8, 25], [7, 25, 8], [2, 3, 5], [2, 5, 3], [3, 2, 5],
-        [3, 5, 2], [5, 2, 3], [5, 3, 2], [64, 3, 5], [64, 5, 3], [3, 64, 5], [3, 5, 64], [5, 64, 3],
-        [5, 3, 64], [27, 625, 49], [27, 49, 625], [625, 27, 49], [625, 49, 27], [49, 27, 625], [49, 625, 27]]
+    factor_2 = [[4, 25], [25, 4], [4, 49], [8, 9], [256, 25], [25, 256],
+        [16, 5], [8, 7], [11, 8], [25, 4], [49, 3], [9, 8],
+        [25, 256], [16, 5], [8, 7], [25, 4], [1,256]]
+    factor_3 = [[9, 5, 49], [9, 49, 5], [5, 9, 49], [49, 5, 9],
+        [8, 7, 25], [7, 25, 8], [2, 3, 5], [2, 5, 3], [3, 2, 5],
+        [3, 5, 2], [64, 3, 5], [3, 5, 64], [5, 64, 3], [1, 1, 64],
+        [27, 625, 49], [625, 27, 49], [49, 27, 625], [49, 625, 27]]
 
     pc = Ref{Int64}(0)
     fc = Ref{Int64}(0)
+ 
+    driver([2, 3, 5, 7], pc, fc, false, stockham, factor_1, "stockham test 1")
+    driver([2, 9, 5, 7], pc, fc, false, stockham, factor_1, "stockham test 2")
+    driver([4, 3, 5, 7], pc, fc, false, stockham, factor_1, "stockham test 3")
+    driver([4, 9, 5, 7], pc, fc, false, stockham, factor_1, "stockham test 4")
+    driver([8, 3, 5, 7], pc, fc, false, stockham, factor_1, "stockham test 5")
+    driver([8, 9, 5, 7], pc, fc, false, stockham, factor_1, "stockham test 6")
 
-    driver([2, 3, 5, 7], pc, fc, stockham, factor_1, "stockham test 1")
-    driver([2, 9, 5, 7], pc, fc, stockham, factor_1, "stockham test 2")
-    driver([4, 3, 5, 7], pc, fc, stockham, factor_1, "stockham test 3")
-    driver([4, 9, 5, 7], pc, fc, stockham, factor_1, "stockham test 4")
-    driver([8, 3, 5, 7], pc, fc, stockham, factor_1, "stockham test 5")
-    driver([8, 9, 5, 7], pc, fc, stockham, factor_1, "stockham test 6")
+    driver([2, 3, 5, 7], pc, fc, true, stockham, factor_1, "stockham inverse test 1")
+    driver([2, 9, 5, 7], pc, fc, true, stockham, factor_1, "stockham inverse test 2")
+    driver([4, 3, 5, 7], pc, fc, true, stockham, factor_1, "stockham inverse test 3")
+    driver([4, 9, 5, 7], pc, fc, true, stockham, factor_1, "stockham inverse test 4")
+    driver([8, 3, 5, 7], pc, fc, true, stockham, factor_1, "stockham inverse test 5")
+    driver([8, 9, 5, 7], pc, fc, true, stockham, factor_1, "stockham inverse test 6")
 
-    driver([2, 3, 5, 7], pc, fc, stockham_inv, factor_1, "stockham inverse test 1")
-    driver([2, 9, 5, 7], pc, fc, stockham_inv, factor_1, "stockham inverse test 2")
-    driver([4, 3, 5, 7], pc, fc, stockham_inv, factor_1, "stockham inverse test 3")
-    driver([4, 9, 5, 7], pc, fc, stockham_inv, factor_1, "stockham inverse test 4")
-    driver([8, 3, 5, 7], pc, fc, stockham_inv, factor_1, "stockham inverse test 5")
-    driver([8, 9, 5, 7], pc, fc, stockham_inv, factor_1, "stockham inverse test 6")
+    driver([2, 3, 5, 7], pc, fc, true, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 0")
+    driver([2, 3, 5, 7], pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 1")
+    driver([4, 3, 5, 7], pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 2")
+    driver([8, 3, 5, 7], pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 3")
+    driver([2, 9, 5, 7], pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 4")
+    driver([4, 9, 5, 7], pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 5")
+    driver([8, 9, 5, 7], pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 6")
 
-    driver([2, 3, 5, 7], pc, fc, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 1")
-    driver([4, 3, 5, 7], pc, fc, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 2")
-    driver([8, 3, 5, 7], pc, fc, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 3")
-    driver([2, 9, 5, 7], pc, fc, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 4")
-    driver([4, 9, 5, 7], pc, fc, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 5")
-    driver([8, 9, 5, 7], pc, fc, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 6")
+    driver([2, 3, 5, 7], pc, fc, true, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 0")
+    driver([2, 3, 5, 7], pc, fc, false, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 1")
+    driver([4, 3, 5, 7], pc, fc, false, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 2")
+    driver([8, 3, 5, 7], pc, fc, false ,MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 3")
+    driver([2, 9, 5, 7], pc, fc, false, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 4")
+    driver([4, 9, 5, 7], pc, fc, false, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 5")
+    driver([8, 9, 5, 7], pc, fc, false, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 6")
 
-    driver([2, 3, 5, 7], pc, fc, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 1")
-    driver([4, 3, 5, 7], pc, fc, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 2")
-    driver([8, 3, 5, 7], pc, fc, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 3")
-    driver([2, 9, 5, 7], pc, fc, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 4")
-    driver([4, 9, 5, 7], pc, fc, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 5")
-    driver([8, 9, 5, 7], pc, fc, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 6")
+    driver([2, 3, 5, 7], pc, fc, true, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 0")
+    driver([2, 3, 5, 7], pc, fc, false, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 1")
+    driver([4, 3, 5, 7], pc, fc, false, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 2")
+    driver([8, 3, 5, 7], pc, fc, false, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 3")
+    driver([2, 9, 5, 7], pc, fc, false, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 4")
+    driver([4, 9, 5, 7], pc, fc, false, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 5")
+    driver([8, 9, 5, 7], pc, fc, false, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 6")
 
-    driver([2, 3, 5, 7], pc, fc, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 1")
-    driver([4, 3, 5, 7], pc, fc, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 2")
-    driver([8, 3, 5, 7], pc, fc, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 3")
-    driver([2, 9, 5, 7], pc, fc, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 4")
-    driver([4, 9, 5, 7], pc, fc, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 5")
-    driver([8, 9, 5, 7], pc, fc, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 6")
-
-    driver([2, 3, 5, 7], pc, fc, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 1")
-    driver([4, 3, 5, 7], pc, fc, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 2")
-    driver([8, 3, 5, 7], pc, fc, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 3")
-    driver([2, 9, 5, 7], pc, fc, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 4")
-    driver([4, 9, 5, 7], pc, fc, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 5")
-    driver([8, 9, 5, 7], pc, fc, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 6")
+    driver([2, 3, 5, 7], pc, fc, true, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 0")
+    driver([2, 3, 5, 7], pc, fc, false, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 1")
+    driver([4, 3, 5, 7], pc, fc, false, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 2")
+    driver([8, 3, 5, 7], pc, fc, false, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 3")
+    driver([2, 9, 5, 7], pc, fc, false, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 4")
+    driver([4, 9, 5, 7], pc, fc, false, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 5")
+    driver([8, 9, 5, 7], pc, fc, false, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 6")
 
     planner_n = [100, 196, 72, 6400, 80, 56, 100, 147, 72, 2205,
         1400, 30, 960, 826875, 2 * 3 * 5 * 7 * 11 * 13]
@@ -230,8 +213,8 @@ function do_tests()
         P = MinimalFFT.MinimalPlan{ComplexF64}(ComplexF64, (n,), 1, MinimalFFT.P_NONE)
         Pinv = MinimalFFT.inv(P)
 
-        test_fft("execute_plan", true, n, pc, fc, MinimalFFT.execute_plan, P, 1) # planner_do_fft
-        test_fft("execute_plan inverse", true, n, pc, fc, MinimalFFT.execute_plan, Pinv, 1) # planner_do_fft inverse
+        test_fft("execute_plan", true, false, n, pc, fc, MinimalFFT.execute_plan, P, 1, 1, 1) # planner_do_fft
+        test_fft("execute_plan inverse", true, true, n, pc, fc, MinimalFFT.execute_plan, Pinv, 1, 1, 1) # planner_do_fft inverse
     end
 
     println("$(pc[]) tests passed.")
@@ -240,8 +223,8 @@ end
 
 today_str = Dates.format(Dates.today(), "yyyymmdd")
 time_str = Dates.format(Dates.now(), "HHMMSS")
-#do_tests()
-@write_fn("../tmp/test17_$today_str" * "_" * "$time_str.txt", do_tests())
+do_tests()
+#@write_fn("../tmp/test17_$today_str" * "_" * "$time_str.txt", do_tests())
 
 function profiler()
     n = 56

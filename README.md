@@ -2,43 +2,42 @@
 # MinimalFFT.jl
 
 This is an implementation of the AbstractFFTs.jl interface
-entirely in Julia.  This allows for fixed-point and symbolic
-FFTs, or different precision.
+in Julia, with some formal prime-factor indexing proofs in Lean.  This package easily allows for fixed-point and symbolic FFTs or different precision.  The results show just how good FFTW is, especially with small block sizes.
+
+I am using AbstractFFTS.jl commit d64a878f3bda8b883a33f7bb05518ee8d8dfc707 Dec 14 2024.
 
 ## Tests
 
 ```
 Test Summary:   | Pass  Total  Time
-Project quality |   11     11  5.8s
-Test Summary:                  | Pass  Total  Time
-correctness of fft, bfft, ifft | 1120   1120  6.1s
+Project quality |   11     11  7.3s
+Test Summary:                  | Pass  Total   Time
+correctness of fft, bfft, ifft | 1120   1120  10.6s
 Test Summary:                     | Pass  Total  Time
-correctness of rfft, brfft, irfft |  540    540  3.8s
+correctness of rfft, brfft, irfft |  540    540  8.5s
 Test Summary: | Pass  Total  Time
 rfft sizes    |    5      5  0.0s
 Test Summary:   | Pass  Total  Time
-Shift functions |   28     28  0.1s
+Shift functions |   28     28  0.2s
 Test Summary:   | Pass  Total  Time
-FFT Frequencies |   71     71  0.3s
+FFT Frequencies |   71     71  0.4s
 Test Summary: | Pass  Total  Time
 normalization |    3      3  0.0s
 Test Summary: | Pass  Total  Time
-Default dims  |   18     18  0.3s
+Default dims  |   18     18  0.4s
 Test Summary:           | Pass  Total  Time
 Complex float promotion |   15     15  0.0s
 Test Summary:                    | Pass  Total  Time
-Adjoint plan on single-precision |    3      3  0.6s
+Adjoint plan on single-precision |    3      3  0.9s
 Test Summary:                                                  | Pass  Total  Time
 Adjoint plan application when plan inverse is not a ScaledPlan |    3      3  0.1s
-
-Note: ChainRules tests do not currently pass.  This is due to
-its attempt to fuzz the FFT plan.
-
 ```
+
+Note: ChainRules tests do not currently pass.  This is due to its attempt to fuzz the MinimalFFT plan.
 
 ## Performance
 
-Of course, performance is good with power of 2 block sizes:
+Of course, performance is very good with power of 2 block sizes:
 
 | FFT backend | Size (N) | Time |
 |-----|------|------|
@@ -47,12 +46,11 @@ Of course, performance is good with power of 2 block sizes:
 | FFTW | 1 << 22 | 53.092 ms |
 | MinimalFFT | 1 << 22 | 47.414 ms |
 
-(Both FFTW and MinimalFFT are running on one thread only.  ComplexF64
-is the data type.)
+(Both FFTW and MinimalFFT are running on one thread only.  ComplexF64 is the data type.)
+
+### Benchmark Procedure
 
 ```
-Benchmark Procedure:
-
 using MinimalFFT, BenchmarkTools
 N=1<<20;x=randn(N)+1.0im*randn(N);
 P=plan_fft(x);
@@ -69,20 +67,24 @@ test/test17.jl shows planned performance comparisons with FFTW.  For small block
 the performance is much worse than FFTW.  Larger block sizes are approximately twice
 as slow as FFTW.
 
-Attempts to improve performance by pre-allocating buffers failed.  Of course, the
-stockham.jl routines could be recoded in assembly language to speed things up.
+## Rader Algorithm
 
 The Rader algorithm is slow, but is included for reference, as it is similar to the Winograd
-decomposition for generating butterfly operations.
+decomposition for generating butterfly operations in
+the generate subdirectory.
 
-![](./bench/small_block.svg)
+## Winograd FFT Butterfly Generation
 
-![](./bench/large_block.svg)
+This is not fully implemented (only shows proof of
+reconstruction) due to difficulties with
+Nemo, Symbolics, SymbolicUtils.  It is difficult to
+use SymbolicUtils to factor the intermediate polynomials
+as desired.
 
 ## Prime Factor Algorithm
 
 A modern approach to the FFT is to use the Prime Factor Algorithm with CTA for each radix, which
-is done by this package.  The code uses a non-standard scrambling/descrambling instead of Good-CRT
+is done here.  The code uses a non-standard scrambling/descrambling instead of Good-CRT
 with lookup table.  See these documents for a summary:
 
 [PFA 2 decomposition](https://agascoig.github.io/MinimalFFT.jl/pfa2.html)

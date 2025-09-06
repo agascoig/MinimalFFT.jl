@@ -5,8 +5,8 @@
 # Takahashi, D. (2020). Fast Fourier Transformation Algorithms for Parallel Computers. Springer. 
 # Nussbaumer, H.J. (1982). Fast Fourier Transform and Convolution Algorithms.  Springer.
 
-function fftr2!(Y::AbstractVector{T}, X::AbstractVector{T},
-    bp::Int64, stride::Int64, N::Int64, e1::Int64, inverse::Bool) where {T<:Complex}
+function fftr2!(Y::Vector{T}, X::Vector{T},
+    N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
     l = N ÷ 2
     m = 1
 
@@ -35,8 +35,8 @@ function fftr2!(Y::AbstractVector{T}, X::AbstractVector{T},
     end
 end
 
-function fftr3!(Y::AbstractVector{T}, X::AbstractVector{T},
-    bp::Int64, stride::Int64, N::Int64, e1::Int64, inverse::Bool) where {T<:Complex}
+function fftr3!(Y::Vector{T}, X::Vector{T},
+    N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
     l = N ÷ 3
     m = 1
 
@@ -74,8 +74,8 @@ function fftr3!(Y::AbstractVector{T}, X::AbstractVector{T},
     end
 end
 
-function fftr4!(Y::AbstractVector{T}, X::AbstractVector{T},
-    bp::Int64, stride::Int64, N::Int64, e1::Int64, inverse::Bool) where {T<:Complex}
+function fftr4!(Y::Vector{T}, X::Vector{T},
+    N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
     l = N >>> 2
     m = 1
 
@@ -114,8 +114,8 @@ function fftr4!(Y::AbstractVector{T}, X::AbstractVector{T},
     end
 end
 
-function fftr5!(Y::AbstractVector{T}, X::AbstractVector{T},
-    bp::Int64, stride::Int64, N::Int64, e1::Int64, inverse::Bool) where {T<:Complex}
+function fftr5!(Y::Vector{T}, X::Vector{T},
+    N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
     l = N ÷ 5
     m = 1
 
@@ -167,8 +167,8 @@ function fftr5!(Y::AbstractVector{T}, X::AbstractVector{T},
     end
 end
 
-function fftr7!(Y::AbstractVector{T}, X::AbstractVector{T},
-    bp::Int64, stride::Int64, N::Int64, e1::Int64, inverse::Bool) where {T<:Complex}
+function fftr7!(Y::Vector{T}, X::Vector{T},
+    N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
     l = N ÷ 7
     m = 1
 
@@ -251,8 +251,8 @@ function fftr7!(Y::AbstractVector{T}, X::AbstractVector{T},
     end
 end
 
-function fftr8!(Y::AbstractVector{T}, X::AbstractVector{T},
-    bp::Int64, stride::Int64, N::Int64, e1::Int64, inverse::Bool) where {T<:Complex}
+function fftr8!(Y::Vector{T}, X::Vector{T},
+    N::Int64, e1::Int64, bp::Int64, stride::Int64,inverse::Bool) where {T<:Complex}
     l = N >>> 3
     m = 1
 
@@ -315,8 +315,8 @@ function fftr8!(Y::AbstractVector{T}, X::AbstractVector{T},
     end
 end
 
-function fftr9!(Y::AbstractVector{T}, X::AbstractVector{T},
-    bp::Int64, stride::Int64, N::Int64, e1::Int64, inverse::Bool) where {T<:Complex}
+function fftr9!(Y::Vector{T}, X::Vector{T},
+    N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
 
     l = N ÷ 9
     m = 1

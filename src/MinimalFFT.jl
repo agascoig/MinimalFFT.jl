@@ -111,17 +111,22 @@ function mul!(y::Array{R,D}, P::MinimalPlan{S}, x::Array{T,E}) where {R<:Number,
 
     # x was real only if not inplace: make complex
     ix = eltype(x) <: Complex ? copy(x) : complex(x)
+    ix = !(real(eltype(ix)) <: AbstractFloat) ? float(ix) : ix
     oy = irfft || rfft ? Array{eltype(ix)}(undef, size(ix)) : y
 
     if D == 1
-        oy, ix = execute_plan(P, oy, ix, 1)
+        oy, ix = execute_plan(P, oy, ix, 1, 1, 1)
     else
         soy = size(oy)
         ET = eltype(oy)
-        for r in P.region
-            oy, ix = do_fft_planned(P, oy, ix, r)
-            ix = oy
+        if length(P.region) > 1
+            for r in P.region[1:end-1]
+                oy, ix = do_fft_planned(P, oy, ix, r)
+                ix = copy(oy) # oy, ix must not aliase, so copy
+            end
         end
+        oy, ix = do_fft_planned(P, oy, ix, P.region[end])
+        ix = oy # TBD
     end
 
     if irfft
@@ -186,7 +191,10 @@ end
 
 function output_buffer(P::MinimalPlan{T}) where {T<:Number}
     s = get_output_size(P)
-    Array{T}(undef, s)
+    if bt(P, P_REAL)
+        return zeros(P.D, s) # TBD?: initialize zero, or conversion trouble
+    end
+    Array{P.D}(undef, s) # TBD: changed from T
 end
 
 # * operator

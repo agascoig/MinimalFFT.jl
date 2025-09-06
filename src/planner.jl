@@ -27,7 +27,7 @@ function plan_1d(P, n, rd)
     end
 
     if n <= DIRECT_SZ
-        fn_mp(P, n, 1, n, direct_dft!)
+        fn_mp(P, n, n, 1, direct_dft!)
     elseif (n & (n - 1)) == 0
         fn_mp(P, n, 2, 63-leading_zeros(n), fftr2!) # power of 2
     elseif length(p_factors) < 4
@@ -54,30 +54,36 @@ end
 
 function gen_plan(P::MinimalPlan{T}) where {T}
     for r in P.region
-        plan_1d(P, P.n[r], r)
+        if r==first(P.region) && bt(P, P_REAL) && bt(P, P_INVERSE)
+            nt=out_N_irfft(P)
+        else
+            nt=P.n[r]
+        end
+        plan_1d(P, nt, r)
     end
 end
 
 # the output size is always the same as the input size here
-function execute_plan(P::MinimalPlan{U}, y::AbstractVector{S}, x::AbstractVector{T}, 
-    r::Int64) where {U,S<:Complex,T<:Complex}
+function execute_plan(P::MinimalPlan{U}, y::Vector{S}, x::Vector{T}, 
+    r::Int64, bp::Int64, instride::Int64) where {U,S<:Complex,T<:Complex}
     inverse = bt(P, P_INVERSE)
 
     @inbounds begin
         ipv = P.ipd[r]
         lf = length(ipv)
         if lf == 1
-            y, x = ipv[1].fun(y, x, 1, 1, ipv[1].ns, ipv[1].exp, inverse)
+            y, x = ipv[1].fun(y, x, ipv[1].ns, ipv[1].exp, bp, instride, inverse)
         elseif lf==2
-            y, x = prime_factor!(y, x, ipv[1].exp, ipv[2].exp, ipv[1].ns, ipv[2].ns, ipv[1].fun, ipv[2].fun, inverse)
+            y, x = prime_factor!(y, x, ipv[1].exp, ipv[2].exp, ipv[1].ns, ipv[2].ns, 
+            ipv[1].fun, ipv[2].fun, bp, instride, inverse)
         elseif lf==3
             y, x = prime_factor!(y, x, ipv[1].exp, ipv[2].exp, ipv[3].exp,
-            ipv[1].ns, ipv[2].ns, ipv[3].ns, ipv[1].fun, ipv[2].fun, ipv[3].fun, inverse)
+            ipv[1].ns, ipv[2].ns, ipv[3].ns, ipv[1].fun, ipv[2].fun, ipv[3].fun,
+            bp, instride, inverse)
         else
-            y, x = fft_bluestein!(y, x, 1, 1, ipv[1].ns, 0, inverse)
+            y, x = fft_bluestein!(y, x, ipv[1].ns, ipv[1].exp, bp, instride, inverse)
         end
     end
-
     (y, x)
 end
 
