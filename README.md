@@ -3,6 +3,7 @@
 
 This is an implementation of the AbstractFFTs.jl interface
 in Julia, with some formal prime-factor indexing proofs in Lean.  This package easily allows for fixed-point and symbolic FFTs or different precision.  The results show just how good FFTW is, especially with small block sizes.
+None of this package is currently hard coded in assembly language.
 
 I am using AbstractFFTS.jl commit d64a878f3bda8b883a33f7bb05518ee8d8dfc707 Dec 14 2024.
 
@@ -10,25 +11,25 @@ I am using AbstractFFTS.jl commit d64a878f3bda8b883a33f7bb05518ee8d8dfc707 Dec 1
 
 ```
 Test Summary:   | Pass  Total  Time
-Project quality |   11     11  7.3s
-Test Summary:                  | Pass  Total   Time
-correctness of fft, bfft, ifft | 1120   1120  10.6s
+Project quality |   11     11  6.6s
+Test Summary:                  | Pass  Total  Time
+correctness of fft, bfft, ifft | 1120   1120  6.5s
 Test Summary:                     | Pass  Total  Time
-correctness of rfft, brfft, irfft |  540    540  8.5s
+correctness of rfft, brfft, irfft |  540    540  4.3s
 Test Summary: | Pass  Total  Time
 rfft sizes    |    5      5  0.0s
 Test Summary:   | Pass  Total  Time
-Shift functions |   28     28  0.2s
+Shift functions |   28     28  0.1s
 Test Summary:   | Pass  Total  Time
-FFT Frequencies |   71     71  0.4s
+FFT Frequencies |   71     71  0.3s
 Test Summary: | Pass  Total  Time
 normalization |    3      3  0.0s
 Test Summary: | Pass  Total  Time
-Default dims  |   18     18  0.4s
+Default dims  |   18     18  0.2s
 Test Summary:           | Pass  Total  Time
 Complex float promotion |   15     15  0.0s
 Test Summary:                    | Pass  Total  Time
-Adjoint plan on single-precision |    3      3  0.9s
+Adjoint plan on single-precision |    3      3  0.7s
 Test Summary:                                                  | Pass  Total  Time
 Adjoint plan application when plan inverse is not a ScaledPlan |    3      3  0.1s
 ```
@@ -52,7 +53,7 @@ Of course, performance is very good with power of 2 block sizes:
 
 ```
 using MinimalFFT, BenchmarkTools
-N=1<<20;x=randn(N)+1.0im*randn(N);
+N=1<<20;x=randn(ComplexF64,N);
 P=plan_fft(x);
 @btime (P * x);
 ```
@@ -77,7 +78,7 @@ the generate subdirectory.
 
 This is not fully implemented (only shows proof of
 reconstruction) due to difficulties with
-Nemo, Symbolics, SymbolicUtils.  It is difficult to
+Nemo, Symbolics, SymbolicUtils.  Namely, it is difficult to
 use SymbolicUtils to factor the intermediate polynomials
 as desired.
 
