@@ -223,14 +223,9 @@ function get_output_size(P::MinimalPlan{T})::Tuple{Vararg{Int64}} where {T<:Numb
     P.n
 end
 
-function output_buffer(P::MinimalPlan{T}) where {T<:Number}
-    s = get_output_size(P)
-    Array{P.D}(undef, s)
-end
-
 # * operator
 function *(P::MinimalPlan{T}, x::Array{T,N}) where {T<:Number,N}
-    y = output_buffer(P)
+    y = Array{P.D,N}(undef, P.os)
     mul!(y, P, x)
     y
 end

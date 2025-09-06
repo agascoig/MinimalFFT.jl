@@ -52,7 +52,7 @@ function plan_1d(P, n, rd)
     end
 end
 
-function gen_plan(P::MinimalPlan{T}) where {T}
+function gen_inner_plan(P::MinimalPlan{T}) where {T}
     for r in P.region
         if r==first(P.region) && bt(P, P_REAL) && bt(P, P_INVERSE)
             nt=out_N_irfft(P)

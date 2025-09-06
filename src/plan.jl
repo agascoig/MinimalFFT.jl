@@ -18,10 +18,11 @@ struct inner_plan
 end
 
 mutable struct MinimalPlan{T} <: Plan{T}
-    D::Type # destination type, for real fft     # required by AbstractFFTs
+    D::DataType # destination type, for real fft     # required by AbstractFFTs
     n::Tuple{Vararg{Int64}} # Size of the FFT input     # required by AbstractFFTs
     region::Union{Int,UnitRange{Int64}}     # required by AbstractFFTs
     flags::Int32 # bit vector of fft type
+    os::Tuple{Vararg{Int64}} # output size
     ipd::Dict{Int64,Vector{inner_plan}} # region -> inner_plan
 
     pinv::ScaledPlan # required by AbstractFFTs
@@ -31,8 +32,9 @@ mutable struct MinimalPlan{T} <: Plan{T}
             if !(D <: AbstractFloat) || (D <: Complex && !(real(D) <: AbstractFloat))
                 D=float(D)
             end
-            mp = new(D, n, region, flags, Dict{Int64,Vector{inner_plan}}())
-            gen_plan(mp)
+            mp = new(D, n, region, flags, Tuple{Vararg{Int64}}(()), Dict{Int64,Vector{inner_plan}}())
+            mp.os = get_output_size(mp)
+            gen_inner_plan(mp)
             mp
         end
 end
