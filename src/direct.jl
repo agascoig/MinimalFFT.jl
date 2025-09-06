@@ -13,7 +13,7 @@ const direct_buff::direct_buffer = direct_buffer(ComplexF64(0.0), 0, false)
 function direct_dft!(y::Vector{T}, x::Vector{T},
     N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
     @inbounds begin
-        B::T = zero(T)
+        B::ComplexF64 = zero(ComplexF64)
         if direct_buff.N == N
             B = direct_buff.B
             if inverse != direct_buff.inverse
