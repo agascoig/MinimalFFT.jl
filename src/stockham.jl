@@ -7,6 +7,7 @@
 
 function fftr2!(Y::Vector{T}, X::Vector{T},
     N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
+    @inbounds begin
     l = N ÷ 2
     m = 1
 
@@ -14,7 +15,6 @@ function fftr2!(Y::Vector{T}, X::Vector{T},
 
     pmim = inverse ? 1.0im : -1.0im
 
-    @inbounds begin
         for t = 1:e1
             w_l = exp(pmim * u / l)
             w = one(T)
@@ -37,6 +37,7 @@ end
 
 function fftr3!(Y::Vector{T}, X::Vector{T},
     N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
+    @inbounds begin
     l = N ÷ 3
     m = 1
 
@@ -48,7 +49,6 @@ function fftr3!(Y::Vector{T}, X::Vector{T},
     r = inverse ? u : -u
     pmim = inverse ? 1.0im : -1.0im
 
-    @inbounds begin
         for t = 1:e1
             w_l = exp(im * r / l)
             w = one(T)
@@ -76,6 +76,7 @@ end
 
 function fftr4!(Y::Vector{T}, X::Vector{T},
     N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
+    @inbounds begin
     l = N >>> 2
     m = 1
 
@@ -84,7 +85,6 @@ function fftr4!(Y::Vector{T}, X::Vector{T},
     r = inverse ? u : -u
     pmim = inverse ? 1.0im : -1.0im
 
-    @inbounds begin
         for t = 1:e1
             w_l = exp(im * r / l)
             w = one(T)
@@ -116,6 +116,7 @@ end
 
 function fftr5!(Y::Vector{T}, X::Vector{T},
     N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
+    @inbounds begin
     l = N ÷ 5
     m = 1
 
@@ -129,7 +130,6 @@ function fftr5!(Y::Vector{T}, X::Vector{T},
     r = inverse ? u : -u
     pmim = inverse ? 1.0im : -1.0im
 
-    @inbounds begin
         for t = 1:e1
             w_l = exp(im * r / l)
             w = one(T)
@@ -169,6 +169,7 @@ end
 
 function fftr7!(Y::Vector{T}, X::Vector{T},
     N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
+    @inbounds begin
     l = N ÷ 7
     m = 1
 
@@ -186,7 +187,6 @@ function fftr7!(Y::Vector{T}, X::Vector{T},
     r = inverse ? u : -u
     pmim = inverse ? 1.0im : -1.0im
 
-    @inbounds begin
         for t = 1:e1
             w_l = exp(im * r / l)
             w = one(T)
@@ -253,6 +253,7 @@ end
 
 function fftr8!(Y::Vector{T}, X::Vector{T},
     N::Int64, e1::Int64, bp::Int64, stride::Int64,inverse::Bool) where {T<:Complex}
+    @inbounds begin
     l = N >>> 3
     m = 1
 
@@ -264,7 +265,6 @@ function fftr8!(Y::Vector{T}, X::Vector{T},
     r = inverse ? u : -u
     pmim = inverse ? 1.0im : -1.0im
 
-    @inbounds begin
         for t = 1:e1
             w_l = exp(im * r / l)
             w = one(T)
@@ -317,7 +317,7 @@ end
 
 function fftr9!(Y::Vector{T}, X::Vector{T},
     N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
-
+    @inbounds begin
     l = N ÷ 9
     m = 1
 
@@ -337,7 +337,6 @@ function fftr9!(Y::Vector{T}, X::Vector{T},
     r = inverse ? u : -u
     pmim = inverse ? 1.0im : -1.0im
 
-    @inbounds begin
         for t = 1:e1
             w_l = exp(im * r / l)
             w = one(T)
