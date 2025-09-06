@@ -19,8 +19,8 @@ end
 
 mutable struct MinimalPlan{T} <: Plan{T}
     D::Type # destination type, for real fft     # required by AbstractFFTs
-    n::Tuple{Vararg{Int}} # Size of the FFT input     # required by AbstractFFTs
-    region::Union{Int,UnitRange{Int}}     # required by AbstractFFTs
+    n::Tuple{Vararg{Int64}} # Size of the FFT input     # required by AbstractFFTs
+    region::Union{Int,UnitRange{Int64}}     # required by AbstractFFTs
     flags::Int32 # bit vector of fft type
     ipd::Dict{Int64,Vector{inner_plan}} # region -> inner_plan
 

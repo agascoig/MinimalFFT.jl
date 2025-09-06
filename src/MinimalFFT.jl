@@ -99,50 +99,61 @@ out_N_rfft(P::MinimalPlan{T}) where {T<:Number} = (P.n[first(P.region)] ÷ 2) + 
 out_N_irfft(P::MinimalPlan{T}) where {T<:Number} = (P.n[first(P.region)] << 1) - 2 + (bt(P, P_ODD))
 
 function mul!(y::Array{R,D}, P::MinimalPlan{S}, x::Array{T,E}) where {R<:Number,S<:Number,T<:Number,D,E}
-    @assert P.n === size(x) "The plan input size must match input x dimensions."
-    if bt(P, P_REAL) && bt(P, P_INVERSE) # irfft
-        dim = first(P.region)
-        C = selectdim(x, dim, size(x)[dim]-(!bt(P, P_ODD)):-1:2)
-        x = cat(x, conj(C), dims=dim)
-    end
-
-    irfft = bt(P, P_REAL) && bt(P, P_INVERSE)
-    rfft = !bt(P, P_INVERSE) && bt(P, P_REAL)
-
-    # x was real only if not inplace: make complex
-    ix = eltype(x) <: Complex ? copy(x) : complex(x)
-    ix = !(real(eltype(ix)) <: AbstractFloat) ? float(ix) : ix
-    oy = irfft || rfft ? Array{eltype(ix)}(undef, size(ix)) : y
-
-    if D == 1
-        oy, ix = execute_plan(P, oy, ix, 1, 1, 1)
-    else
-        soy = size(oy)
-        ET = eltype(oy)
-        if length(P.region) > 1
-            for r in P.region[1:end-1]
-                oy, ix = do_fft_planned(P, oy, ix, r)
-                ix = copy(oy) # oy, ix must not aliase, so copy
-            end
+    @inbounds begin
+        @assert P.n == size(x) "The plan input size must match input x dimensions."
+        if bt(P, P_REAL) && bt(P, P_INVERSE) # irfft
+            dim = first(P.region)
+            C = selectdim(x, dim, size(x)[dim]-(!bt(P, P_ODD)):-1:2)
+            x = cat(x, conj(C), dims=dim)
         end
-        oy, ix = do_fft_planned(P, oy, ix, P.region[end])
-        ix = oy # TBD
-    end
 
-    if irfft
-        y .= real(oy) # force a real output
-    elseif rfft
-        rdim = first(P.region)
-        y .= selectdim(oy, rdim, 1:out_N_rfft(P)) # truncate rfft output
-    elseif oy !== y
-        y .= oy
-    end
+        irfft = bt(P, P_REAL) && bt(P, P_INVERSE)
+        rfft = !bt(P, P_INVERSE) && bt(P, P_REAL)
 
-    if bt(P, P_INPLACE)
-        x .= bt(P, P_ISBFFT) ⊻ bt(P, P_INVERSE) ? scaling_factor(P) * y : y
-    end
+        TEX = eltype(x)
+        OTEX = TEX
+        isc = TEX <: Complex
+        isf = TEX <: AbstractFloat
+        TEX = isf ? TEX : float(TEX)
+        TEX = isc ? TEX : complex(TEX)
 
-    y
+        if TEX !== OTEX
+            ix = convert(Array{TEX,ndims(x)}, x)
+        else
+            ix = copy(x)
+        end
+
+        oy = irfft || rfft ? similar(ix) : y
+
+        if D == 1
+            oy, ix = execute_plan(P, oy, ix, 1, 1, 1)
+        else
+            soy = size(oy)
+            ET = eltype(oy)
+            if length(P.region) > 1
+                for r in P.region[1:end-1]
+                    oy, ix = do_fft_planned(P, oy, ix, r)
+                    oy, ix = ix, oy # always one more; swap input/output
+                end
+            end
+            oy, ix = do_fft_planned(P, oy, ix, P.region[end])
+        end
+
+        if irfft
+            y .= real(oy) # force a real output
+        elseif rfft
+            rdim = first(P.region)
+            y .= selectdim(oy, rdim, 1:out_N_rfft(P)) # truncate rfft output
+        elseif oy !== y
+            y .= oy
+        end
+
+        if bt(P, P_INPLACE)
+            x .= bt(P, P_ISBFFT) ⊻ bt(P, P_INVERSE) ? scaling_factor(P) * y : y
+        end
+
+        y
+    end
 end
 
 function scaling_factor(P::MinimalPlan{T}) where {T<:Number}
@@ -180,7 +191,7 @@ function plan_inv(P::MinimalPlan{T}) where {T<:Number}
 end
 
 # utility functions for output
-function get_output_size(P::MinimalPlan{T}) where {T<:Number}
+function get_output_size(P::MinimalPlan{T})::Tuple{Vararg{Int64}} where {T<:Number}
     if bt(P, P_REAL)
         s = bt(P, P_INVERSE) ? AbstractFFTs.brfft_output_size(P.n, out_N_irfft(P), P.region) :
             AbstractFFTs.rfft_output_size(P.n, P.region)
@@ -191,10 +202,7 @@ end
 
 function output_buffer(P::MinimalPlan{T}) where {T<:Number}
     s = get_output_size(P)
-    if bt(P, P_REAL)
-        return zeros(P.D, s) # TBD?: initialize zero, or conversion trouble
-    end
-    Array{P.D}(undef, s) # TBD: changed from T
+    Array{P.D}(undef, s)
 end
 
 # * operator

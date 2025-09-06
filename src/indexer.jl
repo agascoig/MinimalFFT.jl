@@ -5,7 +5,7 @@
 # (not due to decomposition)
 
 function do_fft_planned(P::MinimalPlan{T},
-    oy::Array{F,D}, ix::Array{F,E}, r::Int64) where {T,F<:Number,D,E}
+    oy::Array{F,D}, ix::Array{F,D}, r::Int64) where {T,F<:Complex,D}
     if r == 1
         oy, ix = do_1d_r1(P, oy, ix)
     else
@@ -14,8 +14,8 @@ function do_fft_planned(P::MinimalPlan{T},
     (oy, ix)
 end
 
-function do_1d(P::MinimalPlan{T}, oy::Array{F,D}, ix::Array{F,E},
-    r::Int64) where {T<:Number,F<:Number,D,E}
+function do_1d(P::MinimalPlan{T}, oy::Array{F,D}, ix::Array{F,D},
+    r::Int64) where {T<:Number,F<:Complex,D}
     @inbounds begin
         Ns = size(oy)
         nd = ndims(oy)
@@ -44,7 +44,7 @@ function do_1d(P::MinimalPlan{T}, oy::Array{F,D}, ix::Array{F,E},
 end
 
 
-function do_1d_r1(P::MinimalPlan{T}, oy::Array{F,D}, ix::Array{F,E}) where {T<:Number,F<:Number,D,E}
+function do_1d_r1(P::MinimalPlan{T}, oy::Array{F,D}, ix::Array{F,D}) where {T<:Number,F<:Complex,D}
     vlength = size(oy, 1)
     bp = 1
     limit = prod(size(oy))
@@ -68,9 +68,9 @@ end
 # dimensions Ns.  These may or may not be embedded in a larger
 # multi-dimensional FFT.
 
-function do_1d(oy::Array{F,D}, ix::Array{F,E},
+function do_1d(oy::Array{F,D}, ix::Array{F,D},
     fn_name::Function, Ns::Tuple{Vararg{Int64}},
-    e1::Int64, r::Int64, bp::Int64, instride::Int64, inverse::Bool) where {F<:Number,D,E}
+    e1::Int64, r::Int64, bp::Int64, instride::Int64, inverse::Bool) where {F<:Complex,D}
     @inbounds begin
         nd = length(Ns)
         strides = [instride * prod(Ns[1:i-1]) for i = 1:nd]
@@ -97,9 +97,9 @@ function do_1d(oy::Array{F,D}, ix::Array{F,E},
     end
 end
 
-function do_1d_r1(oy::Array{F,D}, ix::Array{F,E},
+function do_1d_r1(oy::Array{F,D}, ix::Array{F,D},
     fn_name::Function, Ns::Tuple{Vararg{Int64}},
-    e1::Int64, bp::Int64, instride::Int64, inverse::Bool) where {F<:Number,D,E}
+    e1::Int64, bp::Int64, instride::Int64, inverse::Bool) where {F<:Complex,D}
     @inbounds begin
         vlength = Ns[1]
         flipped = false
@@ -123,9 +123,9 @@ function do_1d_r1(oy::Array{F,D}, ix::Array{F,E},
     end
 end
 
-function do_fft(oy::Array{F,D}, ix::Array{F,E}, fn_name::Function,
+function do_fft(oy::Array{F,D}, ix::Array{F,D}, fn_name::Function,
     Ns::Tuple{Vararg{Int64}}, # embedded size of decomposed FFT
-    e1::Int64, r::Int64, bp::Int64, instride::Int64, inverse::Bool) where {F<:Number,D,E}
+    e1::Int64, r::Int64, bp::Int64, instride::Int64, inverse::Bool) where {F<:Complex,D}
     if r == 1
         oy, ix = do_1d_r1(oy, ix, fn_name, Ns, e1, bp, instride, inverse)
     else

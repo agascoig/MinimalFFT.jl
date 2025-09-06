@@ -1,8 +1,6 @@
 #
 # pfa.jl - Prime Factor Algorithm
 
-# TBD: this has not been verified
-
 import LinearAlgebra: transpose!
 
 function extended_euclid(a::Int, b::Int)

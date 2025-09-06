@@ -10,7 +10,7 @@ mutable struct bs_buffer{T}
     inverse::Bool
 end
 
-bs_dict = IdDict{DataType, bs_buffer}()
+const bs_dict = IdDict{DataType, bs_buffer}()
 
 function fft_bluestein!(y::Vector{T}, x::Vector{T},
     N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
