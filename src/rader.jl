@@ -1,4 +1,6 @@
 
+# rader.jl - Slow algorithm included for study of Winograd algorithm
+
 using Primes
 
 function circular_convolution(NP::Int64, X1::Vector{T}, X2::Vector{T}) where {T<:Complex}
@@ -9,10 +11,10 @@ function circular_convolution(NP::Int64, X1::Vector{T}, X2::Vector{T}) where {T<
 
     e1 = 63 - leading_zeros(L)
 
-    X1, X = fftr2!(X, X1, e1, false)
-    X2, X = fftr2!(X, X2, e1, false)
+    X1, X = fftr2!(X, X1, L, e1, 1, 1, false)
+    X2, X = fftr2!(X, X2, L, e1, 1, 1, false)
     X2 .= X2 .* X1
-    X, X2 = fftr2!(X, X2, e1, true)
+    X, X2 = fftr2!(X, X2, L, e1, 1, 1, true)
     scale = 1.0 / L
     X .= scale * X
 
@@ -24,7 +26,7 @@ function circular_convolution(NP::Int64, X1::Vector{T}, X2::Vector{T}) where {T<
     X2, X1
 end
 
-function fft_rader!(y::Vector{T}, x::Vector{T}, e1::Int64, inverse::Bool=false) where {T<:Complex}
+function fft_rader!(y::Vector{T}, x::Vector{T}, e1::Int64, bp::Int64, stride::Int64, inverse::Bool=false) where {T<:Complex}
     N = length(x)
     L = nextpow(2, 2*N - 3)
 

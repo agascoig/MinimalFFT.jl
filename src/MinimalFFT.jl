@@ -44,12 +44,6 @@ import AbstractFFTs: Plan, ScaledPlan, plan_fft, plan_fft!, plan_bfft, plan_bfft
     AdjointStyle, AdjointPlan, FFTAdjointStyle, RFFTAdjointStyle, IRFFTAdjointStyle
 import LinearAlgebra: mul!, rmul!, lmul!
 
-# TBD: print plan
-## Define how MyType is printed in standard output
-#function Base.show(io::IO, x::MyType)
-#    print(io, "MyType(name: ", x.name, ", value: ", x.value, ")")
-#end
-
 include("plan.jl")
 
 function min_plan(S::Type, D::Type, x, region, flags)
@@ -237,6 +231,5 @@ include("mixedradix.jl")
 include("pfa.jl")
 include("bluestein.jl")
 include("rader.jl")
-include("planner.jl")
 
 end # module

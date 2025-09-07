@@ -1,9 +1,4 @@
 
-# Redefine @inbounds
-@eval macro inbounds(ex)
-    return esc(ex)  # ignore inbounds and keep checks
-end
-
 function print_dft(x, name)
     println("\nreal:")
     for k=1:length(x)
@@ -59,8 +54,8 @@ function remove_small_terms(expr, tol=1e-12)
     simplify(r + im * i)
 end
 
-y_direct, x_direct = direct_dft!(y_direct, x_direct, false)
-y_rader, x_rader = fft_rader!(y_rader, x_rader, false)
+y_direct, x_direct = direct_dft!(y_direct, x_direct, length(x_direct), 1, 1, 1, false)
+y_rader, x_rader = fft_rader!(y_rader, x_rader, length(x_rader), 1, 1, false)
 
 y_rader = remove_small_terms.(y_rader);
 y_direct = remove_small_terms.(y_direct);
