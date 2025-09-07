@@ -38,28 +38,8 @@ Note: ChainRules tests do not currently pass.  This is due to its attempt to fuz
 
 ## Performance
 
-Of course, performance is very good with power of 2 block sizes
-(a special case):
-
-| FFT backend | Size (N) | Time |
-|-----|------|------|
-| FFTW.jl | 1 << 20 | 9.774 ms |
-| MinimalFFT.jl | 1 << 20 | 1.332 ms |
-| FFTW.jl | 1 << 22 | 53.972 ms |
-| MinimalFFT.jl | 1 << 22 | 8.472 ms |
-
-(Both FFTW and MinimalFFT are running on one thread only.  ComplexF64 is the data type.)
-
-### Benchmark Procedure
-
-```
-using MinimalFFT, BenchmarkTools
-N=1<<20;x=randn(ComplexF64,N);
-P=plan_fft(x);
-@btime (P * x);
-```
-
-These were obtained on an Apple Mac Mini M4 Pro processor.
+Of course, performance is very good with large power of 2 block sizes
+(a special but common case).
 
 Performance was significantly better (7x) with a Stockham-style radix-2 FFT than a
 Cooley-Tukey algorithm, probably due to less memory conflicts (no need to do bit reversal
