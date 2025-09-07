@@ -70,20 +70,20 @@ function execute_plan(P::MinimalPlan{U}, y::Vector{S}, x::Vector{T},
         inverse = bt(P, P_INVERSE)
         ipv = P.ipd[r]
         lf = length(ipv)
-        fun1 = ipv[1].fun
-        ns1 = ipv[1].ns
+        ipv1 = ipv[1]
+        fun1 = ipv1.fun
+        ns1 = ipv1.ns
+        exp1 = ipv1.exp
         if lf == 1 || lf>3
-            y, x = fun1(y, x, ns1, 1, bp, instride, inverse)
+            y, x = fun1(y, x, ns1, exp1, bp, instride, inverse)
         elseif lf == 2
-            ipv1=ipv[1]
             ipv2=ipv[2]
-            y, x = prime_factor!(y, x, ipv1.exp, ipv2.exp, ns1, ipv2.ns,
+            y, x = prime_factor!(y, x, exp1, ipv2.exp, ns1, ipv2.ns,
                 fun1, ipv2.fun, bp, instride, inverse)
         elseif lf == 3
-            ipv1=ipv[1]
             ipv2=ipv[2]
             ipv3=ipv[3]
-            y, x = prime_factor!(y, x, ipv1.exp, ipv2.exp, ipv3.exp,
+            y, x = prime_factor!(y, x, exp1, ipv2.exp, ipv3.exp,
                 ns1, ipv2.ns, ipv3.ns, fun1, ipv2.fun, ipv3.fun,
                 bp, instride, inverse)
         end
