@@ -159,7 +159,7 @@ function do_tests()
     fc = Ref{Int64}(0)
  
     driver([2, 3, 5, 7], false, pc, fc, false, stockham, factor_1, "stockham test 0")
-    driver([2, 3, 5, 7], true, pc, fc, false, stockham, factor_1, "stockham test 1")
+    driver([2, 3, 5, 7], true, pc, fc, false, stockham, factor_1, "stockham test 1 timed")
     driver([2, 9, 5, 7], false, pc, fc, false, stockham, factor_1, "stockham test 2")
     driver([4, 3, 5, 7], false, pc, fc, false, stockham, factor_1, "stockham test 3")
     driver([4, 9, 5, 7], false, pc, fc, false, stockham, factor_1, "stockham test 4")
@@ -167,7 +167,7 @@ function do_tests()
     driver([8, 9, 5, 7], false, pc, fc, false, stockham, factor_1, "stockham test 6")
 
     driver([2, 3, 5, 7], false, pc, fc, true, stockham, factor_1, "stockham inverse test 0")
-    driver([2, 3, 5, 7], true, pc, fc, true, stockham, factor_1, "stockham inverse test 1")
+    driver([2, 3, 5, 7], true, pc, fc, true, stockham, factor_1, "stockham inverse test 1 timed")
     driver([2, 9, 5, 7], false, pc, fc, true, stockham, factor_1, "stockham inverse test 2")
     driver([4, 3, 5, 7], false, pc, fc, true, stockham, factor_1, "stockham inverse test 3")
     driver([4, 9, 5, 7], false, pc, fc, true, stockham, factor_1, "stockham inverse test 4")
@@ -175,7 +175,7 @@ function do_tests()
     driver([8, 9, 5, 7], false, pc, fc, true, stockham, factor_1, "stockham inverse test 6")
 
     driver([2, 3, 5, 7], false, pc, fc, true, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 0")
-    driver([2, 3, 5, 7], true, pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 1")
+    driver([2, 3, 5, 7], true, pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 1 timed")
     driver([4, 3, 5, 7], false, pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 2")
     driver([8, 3, 5, 7], false, pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 3")
     driver([2, 9, 5, 7], false, pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 4")
@@ -183,7 +183,7 @@ function do_tests()
     driver([8, 9, 5, 7], false, pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 6")
 
     driver([2, 3, 5, 7], false, pc, fc, true, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 0")
-    driver([2, 3, 5, 7], true, pc, fc, false, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 1")
+    driver([2, 3, 5, 7], true, pc, fc, false, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 1 timed")
     driver([4, 3, 5, 7], false, pc, fc, false, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 2")
     driver([8, 3, 5, 7], false, pc, fc, false ,MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 3")
     driver([2, 9, 5, 7], false, pc, fc, false, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 4")
@@ -199,7 +199,7 @@ function do_tests()
     driver([8, 9, 5, 7], false, pc, fc, false, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 6")
 
     driver([2, 3, 5, 7], false, pc, fc, true, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 0")
-    driver([2, 3, 5, 7], true, pc, fc, false, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 1")
+    driver([2, 3, 5, 7], true, pc, fc, false, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 1 timed")
     driver([4, 3, 5, 7], false, pc, fc, false, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 2")
     driver([8, 3, 5, 7], false, pc, fc, false, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 3")
     driver([2, 9, 5, 7], false, pc, fc, false, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 4")
@@ -215,8 +215,8 @@ function do_tests()
         P = MinimalFFT.MinimalPlan{ComplexF64}(ComplexF64, (n,), 1, MinimalFFT.P_NONE)
         Pinv = MinimalFFT.inv(P)
 
-        test_fft("execute_plan", true, false, n, pc, fc, MinimalFFT.execute_plan, P, 1, 1, 1) # planner_do_fft
-        test_fft("execute_plan inverse", true, true, n, pc, fc, MinimalFFT.execute_plan, Pinv, 1, 1, 1) # planner_do_fft inverse
+        test_fft("execute_plan timed", true, false, n, pc, fc, MinimalFFT.execute_plan, P, 1, 1, 1) # planner_do_fft
+        test_fft("execute_plan inverse timed", true, true, n, pc, fc, MinimalFFT.execute_plan, Pinv, 1, 1, 1) # planner_do_fft inverse
     end
 
     println("$(pc[]) tests passed.")
