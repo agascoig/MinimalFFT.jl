@@ -38,14 +38,15 @@ Note: ChainRules tests do not currently pass.  This is due to its attempt to fuz
 
 ## Performance
 
-Of course, performance is very good with power of 2 block sizes:
+Of course, performance is very good with power of 2 block sizes
+(a special case):
 
 | FFT backend | Size (N) | Time |
 |-----|------|------|
-| FFTW | 1 << 20 | 9.702 ms |
-| MinimalFFT | 1 << 20 | 9.421 ms |
-| FFTW | 1 << 22 | 53.092 ms |
-| MinimalFFT | 1 << 22 | 47.414 ms |
+| FFTW.jl | 1 << 20 | 9.774 ms |
+| MinimalFFT.jl | 1 << 20 | 1.332 ms |
+| FFTW.jl | 1 << 22 | 53.972 ms |
+| MinimalFFT.jl | 1 << 22 | 8.472 ms |
 
 (Both FFTW and MinimalFFT are running on one thread only.  ComplexF64 is the data type.)
 
