@@ -39,7 +39,14 @@ Note: ChainRules tests do not currently pass.  This is due to its attempt to fuz
 ## Performance
 
 Of course, performance is very good with large power of 2 block sizes
-(a special but common case).
+(a special but common case):
+
+| FFT backend | Size (N) | Time |
+|-----|------|------|
+| FFTW.jl | 1 << 20 | 9.774 ms |
+| MinimalFFT.jl | 1 << 20 | 10.787 ms |
+| FFTW.jl | 1 << 22 | 53.972 ms |
+| MinimalFFT.jl | 1 << 22 | 46.867 ms |
 
 Performance was significantly better (7x) with a Stockham-style radix-2 FFT than a
 Cooley-Tukey algorithm, probably due to less memory conflicts (no need to do bit reversal
