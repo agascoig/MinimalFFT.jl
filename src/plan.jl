@@ -10,11 +10,11 @@ const P_ODD = 16
 const P_SCALED = 32
 
 # inner_plan for a region
-struct inner_plan
+struct inner_plan{F<:Function}
     ns::Int64
     base::Int64
     exp::Int64
-    fun::Function
+    fun::F
 end
 
 mutable struct MinimalPlan{T} <: Plan{T}

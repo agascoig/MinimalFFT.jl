@@ -1,0 +1,453 @@
+# 2025-09-06 time: 18:39:36
+
+
+Passed for stockham test 0: N=8 args=(MinimalFFT.fftr2!, 3, false)
+Passed for stockham test 0: N=25 args=(MinimalFFT.fftr5!, 2, false)
+Passed for stockham test 0: N=27 args=(MinimalFFT.fftr3!, 3, false)
+Passed for stockham test 0: N=16 args=(MinimalFFT.fftr2!, 4, false)
+Passed for stockham test 0: N=125 args=(MinimalFFT.fftr5!, 3, false)
+Passed for stockham test 0: N=49 args=(MinimalFFT.fftr7!, 2, false)
+Passed for stockham test 0: N=64 args=(MinimalFFT.fftr2!, 6, false)
+Passed for stockham test 0: N=81 args=(MinimalFFT.fftr3!, 4, false)
+Passed for stockham test 0: N=729 args=(MinimalFFT.fftr3!, 6, false)
+Passed for stockham test 0: N=256 args=(MinimalFFT.fftr2!, 8, false)
+Passed for stockham test 1 timed: N=8 time=5.76e-08 args=(MinimalFFT.fftr2!, 3, false) factor_ref=2.198
+Passed for stockham test 1 timed: N=25 time=1.01e-07 args=(MinimalFFT.fftr5!, 2, false) factor_ref=1.795
+Passed for stockham test 1 timed: N=27 time=1.23e-07 args=(MinimalFFT.fftr3!, 3, false) factor_ref=2.214
+Passed for stockham test 1 timed: N=16 time=9.17e-08 args=(MinimalFFT.fftr2!, 4, false) factor_ref=2.328
+Passed for stockham test 1 timed: N=125 time=5.56e-07 args=(MinimalFFT.fftr5!, 3, false) factor_ref=2.161
+Passed for stockham test 1 timed: N=49 time=2.15e-07 args=(MinimalFFT.fftr7!, 2, false) factor_ref=2.268
+Passed for stockham test 1 timed: N=64 time=2.86e-07 args=(MinimalFFT.fftr2!, 6, false) factor_ref=2.733
+Passed for stockham test 1 timed: N=81 time=3.37e-07 args=(MinimalFFT.fftr3!, 4, false) factor_ref=2.220
+Passed for stockham test 1 timed: N=729 time=3.73e-06 args=(MinimalFFT.fftr3!, 6, false) factor_ref=1.923
+Passed for stockham test 1 timed: N=256 time=1.22e-06 args=(MinimalFFT.fftr2!, 8, false) factor_ref=2.690
+Passed for stockham test 2: N=8 args=(MinimalFFT.fftr2!, 3, false)
+Passed for stockham test 2: N=25 args=(MinimalFFT.fftr5!, 2, false)
+Passed for stockham test 2: N=16 args=(MinimalFFT.fftr2!, 4, false)
+Passed for stockham test 2: N=125 args=(MinimalFFT.fftr5!, 3, false)
+Passed for stockham test 2: N=49 args=(MinimalFFT.fftr7!, 2, false)
+Passed for stockham test 2: N=64 args=(MinimalFFT.fftr2!, 6, false)
+Passed for stockham test 2: N=81 args=(MinimalFFT.fftr9!, 2, false)
+Passed for stockham test 2: N=729 args=(MinimalFFT.fftr9!, 3, false)
+Passed for stockham test 2: N=256 args=(MinimalFFT.fftr2!, 8, false)
+Passed for stockham test 3: N=25 args=(MinimalFFT.fftr5!, 2, false)
+Passed for stockham test 3: N=27 args=(MinimalFFT.fftr3!, 3, false)
+Passed for stockham test 3: N=16 args=(MinimalFFT.fftr4!, 2, false)
+Passed for stockham test 3: N=125 args=(MinimalFFT.fftr5!, 3, false)
+Passed for stockham test 3: N=49 args=(MinimalFFT.fftr7!, 2, false)
+Passed for stockham test 3: N=64 args=(MinimalFFT.fftr4!, 3, false)
+Passed for stockham test 3: N=81 args=(MinimalFFT.fftr3!, 4, false)
+Passed for stockham test 3: N=729 args=(MinimalFFT.fftr3!, 6, false)
+Passed for stockham test 3: N=256 args=(MinimalFFT.fftr4!, 4, false)
+Passed for stockham test 4: N=25 args=(MinimalFFT.fftr5!, 2, false)
+Passed for stockham test 4: N=16 args=(MinimalFFT.fftr4!, 2, false)
+Passed for stockham test 4: N=125 args=(MinimalFFT.fftr5!, 3, false)
+Passed for stockham test 4: N=49 args=(MinimalFFT.fftr7!, 2, false)
+Passed for stockham test 4: N=64 args=(MinimalFFT.fftr4!, 3, false)
+Passed for stockham test 4: N=81 args=(MinimalFFT.fftr9!, 2, false)
+Passed for stockham test 4: N=729 args=(MinimalFFT.fftr9!, 3, false)
+Passed for stockham test 4: N=256 args=(MinimalFFT.fftr4!, 4, false)
+Passed for stockham test 5: N=8 args=(MinimalFFT.fftr8!, 1, false)
+Passed for stockham test 5: N=25 args=(MinimalFFT.fftr5!, 2, false)
+Passed for stockham test 5: N=27 args=(MinimalFFT.fftr3!, 3, false)
+Passed for stockham test 5: N=125 args=(MinimalFFT.fftr5!, 3, false)
+Passed for stockham test 5: N=49 args=(MinimalFFT.fftr7!, 2, false)
+Passed for stockham test 5: N=64 args=(MinimalFFT.fftr8!, 2, false)
+Passed for stockham test 5: N=81 args=(MinimalFFT.fftr3!, 4, false)
+Passed for stockham test 5: N=729 args=(MinimalFFT.fftr3!, 6, false)
+Passed for stockham test 6: N=8 args=(MinimalFFT.fftr8!, 1, false)
+Passed for stockham test 6: N=25 args=(MinimalFFT.fftr5!, 2, false)
+Passed for stockham test 6: N=125 args=(MinimalFFT.fftr5!, 3, false)
+Passed for stockham test 6: N=49 args=(MinimalFFT.fftr7!, 2, false)
+Passed for stockham test 6: N=64 args=(MinimalFFT.fftr8!, 2, false)
+Passed for stockham test 6: N=81 args=(MinimalFFT.fftr9!, 2, false)
+Passed for stockham test 6: N=729 args=(MinimalFFT.fftr9!, 3, false)
+Passed for stockham inverse test 0: N=8 args=(MinimalFFT.fftr2!, 3, true)
+Passed for stockham inverse test 0: N=25 args=(MinimalFFT.fftr5!, 2, true)
+Passed for stockham inverse test 0: N=27 args=(MinimalFFT.fftr3!, 3, true)
+Passed for stockham inverse test 0: N=16 args=(MinimalFFT.fftr2!, 4, true)
+Passed for stockham inverse test 0: N=125 args=(MinimalFFT.fftr5!, 3, true)
+Passed for stockham inverse test 0: N=49 args=(MinimalFFT.fftr7!, 2, true)
+Passed for stockham inverse test 0: N=64 args=(MinimalFFT.fftr2!, 6, true)
+Passed for stockham inverse test 0: N=81 args=(MinimalFFT.fftr3!, 4, true)
+Passed for stockham inverse test 0: N=729 args=(MinimalFFT.fftr3!, 6, true)
+Passed for stockham inverse test 0: N=256 args=(MinimalFFT.fftr2!, 8, true)
+Passed for stockham inverse test 1 timed: N=8 time=5.76e-08 args=(MinimalFFT.fftr2!, 3, true) factor_ref=1.875
+Passed for stockham inverse test 1 timed: N=25 time=9.96e-08 args=(MinimalFFT.fftr5!, 2, true) factor_ref=1.499
+Passed for stockham inverse test 1 timed: N=27 time=1.23e-07 args=(MinimalFFT.fftr3!, 3, true) factor_ref=1.874
+Passed for stockham inverse test 1 timed: N=16 time=9.24e-08 args=(MinimalFFT.fftr2!, 4, true) factor_ref=2.334
+Passed for stockham inverse test 1 timed: N=125 time=5.57e-07 args=(MinimalFFT.fftr5!, 3, true) factor_ref=1.730
+Passed for stockham inverse test 1 timed: N=49 time=2.24e-07 args=(MinimalFFT.fftr7!, 2, true) factor_ref=2.042
+Passed for stockham inverse test 1 timed: N=64 time=2.86e-07 args=(MinimalFFT.fftr2!, 6, true) factor_ref=2.151
+Passed for stockham inverse test 1 timed: N=81 time=3.44e-07 args=(MinimalFFT.fftr3!, 4, true) factor_ref=1.860
+Passed for stockham inverse test 1 timed: N=729 time=4.32e-06 args=(MinimalFFT.fftr3!, 6, true) factor_ref=2.038
+Passed for stockham inverse test 1 timed: N=256 time=1.16e-06 args=(MinimalFFT.fftr2!, 8, true) factor_ref=2.266
+Passed for stockham inverse test 2: N=8 args=(MinimalFFT.fftr2!, 3, true)
+Passed for stockham inverse test 2: N=25 args=(MinimalFFT.fftr5!, 2, true)
+Passed for stockham inverse test 2: N=16 args=(MinimalFFT.fftr2!, 4, true)
+Passed for stockham inverse test 2: N=125 args=(MinimalFFT.fftr5!, 3, true)
+Passed for stockham inverse test 2: N=49 args=(MinimalFFT.fftr7!, 2, true)
+Passed for stockham inverse test 2: N=64 args=(MinimalFFT.fftr2!, 6, true)
+Passed for stockham inverse test 2: N=81 args=(MinimalFFT.fftr9!, 2, true)
+Passed for stockham inverse test 2: N=729 args=(MinimalFFT.fftr9!, 3, true)
+Passed for stockham inverse test 2: N=256 args=(MinimalFFT.fftr2!, 8, true)
+Passed for stockham inverse test 3: N=25 args=(MinimalFFT.fftr5!, 2, true)
+Passed for stockham inverse test 3: N=27 args=(MinimalFFT.fftr3!, 3, true)
+Passed for stockham inverse test 3: N=16 args=(MinimalFFT.fftr4!, 2, true)
+Passed for stockham inverse test 3: N=125 args=(MinimalFFT.fftr5!, 3, true)
+Passed for stockham inverse test 3: N=49 args=(MinimalFFT.fftr7!, 2, true)
+Passed for stockham inverse test 3: N=64 args=(MinimalFFT.fftr4!, 3, true)
+Passed for stockham inverse test 3: N=81 args=(MinimalFFT.fftr3!, 4, true)
+Passed for stockham inverse test 3: N=729 args=(MinimalFFT.fftr3!, 6, true)
+Passed for stockham inverse test 3: N=256 args=(MinimalFFT.fftr4!, 4, true)
+Passed for stockham inverse test 4: N=25 args=(MinimalFFT.fftr5!, 2, true)
+Passed for stockham inverse test 4: N=16 args=(MinimalFFT.fftr4!, 2, true)
+Passed for stockham inverse test 4: N=125 args=(MinimalFFT.fftr5!, 3, true)
+Passed for stockham inverse test 4: N=49 args=(MinimalFFT.fftr7!, 2, true)
+Passed for stockham inverse test 4: N=64 args=(MinimalFFT.fftr4!, 3, true)
+Passed for stockham inverse test 4: N=81 args=(MinimalFFT.fftr9!, 2, true)
+Passed for stockham inverse test 4: N=729 args=(MinimalFFT.fftr9!, 3, true)
+Passed for stockham inverse test 4: N=256 args=(MinimalFFT.fftr4!, 4, true)
+Passed for stockham inverse test 5: N=8 args=(MinimalFFT.fftr8!, 1, true)
+Passed for stockham inverse test 5: N=25 args=(MinimalFFT.fftr5!, 2, true)
+Passed for stockham inverse test 5: N=27 args=(MinimalFFT.fftr3!, 3, true)
+Passed for stockham inverse test 5: N=125 args=(MinimalFFT.fftr5!, 3, true)
+Passed for stockham inverse test 5: N=49 args=(MinimalFFT.fftr7!, 2, true)
+Passed for stockham inverse test 5: N=64 args=(MinimalFFT.fftr8!, 2, true)
+Passed for stockham inverse test 5: N=81 args=(MinimalFFT.fftr3!, 4, true)
+Passed for stockham inverse test 5: N=729 args=(MinimalFFT.fftr3!, 6, true)
+Passed for stockham inverse test 6: N=8 args=(MinimalFFT.fftr8!, 1, true)
+Passed for stockham inverse test 6: N=25 args=(MinimalFFT.fftr5!, 2, true)
+Passed for stockham inverse test 6: N=125 args=(MinimalFFT.fftr5!, 3, true)
+Passed for stockham inverse test 6: N=49 args=(MinimalFFT.fftr7!, 2, true)
+Passed for stockham inverse test 6: N=64 args=(MinimalFFT.fftr8!, 2, true)
+Passed for stockham inverse test 6: N=81 args=(MinimalFFT.fftr9!, 2, true)
+Passed for stockham inverse test 6: N=729 args=(MinimalFFT.fftr9!, 3, true)
+Passed for prime factor 2 test 0: N=100 args=(2, 2, 4, 25, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for prime factor 2 test 0: N=100 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for prime factor 2 test 0: N=196 args=(2, 2, 4, 49, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, true)
+Passed for prime factor 2 test 0: N=72 args=(3, 2, 8, 9, MinimalFFT.fftr2!, MinimalFFT.fftr3!, 1, 1, true)
+Passed for prime factor 2 test 0: N=6400 args=(8, 2, 256, 25, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for prime factor 2 test 0: N=6400 args=(2, 8, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for prime factor 2 test 0: N=80 args=(4, 1, 16, 5, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for prime factor 2 test 0: N=56 args=(3, 1, 8, 7, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, true)
+Passed for prime factor 2 test 0: N=100 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for prime factor 2 test 0: N=147 args=(2, 1, 49, 3, MinimalFFT.fftr7!, MinimalFFT.fftr3!, 1, 1, true)
+Passed for prime factor 2 test 0: N=72 args=(2, 3, 9, 8, MinimalFFT.fftr3!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for prime factor 2 test 0: N=6400 args=(2, 8, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for prime factor 2 test 0: N=80 args=(4, 1, 16, 5, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for prime factor 2 test 0: N=56 args=(3, 1, 8, 7, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, true)
+Passed for prime factor 2 test 0: N=100 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for prime factor 2 test 1 timed: N=100 time=1.41e-06 args=(2, 2, 4, 25, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=7.573
+Passed for prime factor 2 test 1 timed: N=100 time=1.42e-06 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=7.820
+Passed for prime factor 2 test 1 timed: N=196 time=2.87e-06 args=(2, 2, 4, 49, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, false) factor_ref=7.480
+Passed for prime factor 2 test 1 timed: N=72 time=1.06e-06 args=(3, 2, 8, 9, MinimalFFT.fftr2!, MinimalFFT.fftr3!, 1, 1, false) factor_ref=7.586
+Passed for prime factor 2 test 1 timed: N=6400 time=7.62e-05 args=(8, 2, 256, 25, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=3.761
+Passed for prime factor 2 test 1 timed: N=6400 time=6.32e-05 args=(2, 8, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=2.387
+Passed for prime factor 2 test 1 timed: N=80 time=1.01e-06 args=(4, 1, 16, 5, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=6.787
+Passed for prime factor 2 test 1 timed: N=56 time=7.96e-07 args=(3, 1, 8, 7, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, false) factor_ref=7.069
+Passed for prime factor 2 test 1 timed: N=100 time=1.44e-06 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=7.479
+Passed for prime factor 2 test 1 timed: N=147 time=1.95e-06 args=(2, 1, 49, 3, MinimalFFT.fftr7!, MinimalFFT.fftr3!, 1, 1, false) factor_ref=5.359
+Passed for prime factor 2 test 1 timed: N=72 time=1.09e-06 args=(2, 3, 9, 8, MinimalFFT.fftr3!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=7.508
+Passed for prime factor 2 test 1 timed: N=6400 time=6.31e-05 args=(2, 8, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=3.061
+Passed for prime factor 2 test 1 timed: N=80 time=1.00e-06 args=(4, 1, 16, 5, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=6.427
+Passed for prime factor 2 test 1 timed: N=56 time=7.99e-07 args=(3, 1, 8, 7, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, false) factor_ref=7.178
+Passed for prime factor 2 test 1 timed: N=100 time=1.43e-06 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=7.407
+Passed for prime factor 2 test 2: N=100 args=(1, 2, 4, 25, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 2 test 2: N=100 args=(2, 1, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for prime factor 2 test 2: N=196 args=(1, 2, 4, 49, MinimalFFT.fftr4!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 2 test 2: N=6400 args=(4, 2, 256, 25, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 2 test 2: N=6400 args=(2, 4, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for prime factor 2 test 2: N=80 args=(2, 1, 16, 5, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 2 test 2: N=100 args=(2, 1, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for prime factor 2 test 2: N=147 args=(2, 1, 49, 3, MinimalFFT.fftr7!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for prime factor 2 test 2: N=6400 args=(2, 4, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for prime factor 2 test 2: N=80 args=(2, 1, 16, 5, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 2 test 2: N=100 args=(2, 1, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for prime factor 2 test 3: N=72 args=(1, 2, 8, 9, MinimalFFT.fftr8!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for prime factor 2 test 3: N=56 args=(1, 1, 8, 7, MinimalFFT.fftr8!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 2 test 3: N=147 args=(2, 1, 49, 3, MinimalFFT.fftr7!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for prime factor 2 test 3: N=72 args=(2, 1, 9, 8, MinimalFFT.fftr3!, MinimalFFT.fftr8!, 1, 1, false)
+Passed for prime factor 2 test 3: N=56 args=(1, 1, 8, 7, MinimalFFT.fftr8!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 2 test 4: N=100 args=(2, 2, 4, 25, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 2 test 4: N=100 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false)
+Passed for prime factor 2 test 4: N=196 args=(2, 2, 4, 49, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 2 test 4: N=72 args=(3, 1, 8, 9, MinimalFFT.fftr2!, MinimalFFT.fftr9!, 1, 1, false)
+Passed for prime factor 2 test 4: N=6400 args=(8, 2, 256, 25, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 2 test 4: N=6400 args=(2, 8, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false)
+Passed for prime factor 2 test 4: N=80 args=(4, 1, 16, 5, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 2 test 4: N=56 args=(3, 1, 8, 7, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 2 test 4: N=100 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false)
+Passed for prime factor 2 test 4: N=72 args=(1, 3, 9, 8, MinimalFFT.fftr9!, MinimalFFT.fftr2!, 1, 1, false)
+Passed for prime factor 2 test 4: N=6400 args=(2, 8, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false)
+Passed for prime factor 2 test 4: N=80 args=(4, 1, 16, 5, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 2 test 4: N=56 args=(3, 1, 8, 7, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 2 test 4: N=100 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false)
+Passed for prime factor 2 test 5: N=100 args=(1, 2, 4, 25, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 2 test 5: N=100 args=(2, 1, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for prime factor 2 test 5: N=196 args=(1, 2, 4, 49, MinimalFFT.fftr4!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 2 test 5: N=6400 args=(4, 2, 256, 25, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 2 test 5: N=6400 args=(2, 4, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for prime factor 2 test 5: N=80 args=(2, 1, 16, 5, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 2 test 5: N=100 args=(2, 1, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for prime factor 2 test 5: N=6400 args=(2, 4, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for prime factor 2 test 5: N=80 args=(2, 1, 16, 5, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 2 test 5: N=100 args=(2, 1, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for prime factor 2 test 6: N=72 args=(1, 1, 8, 9, MinimalFFT.fftr8!, MinimalFFT.fftr9!, 1, 1, false)
+Passed for prime factor 2 test 6: N=56 args=(1, 1, 8, 7, MinimalFFT.fftr8!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 2 test 6: N=72 args=(1, 1, 9, 8, MinimalFFT.fftr9!, MinimalFFT.fftr8!, 1, 1, false)
+Passed for prime factor 2 test 6: N=56 args=(1, 1, 8, 7, MinimalFFT.fftr8!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 2 test 0: N=100 args=(2, 2, 4, 25, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for mixed radix 2 test 0: N=100 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for mixed radix 2 test 0: N=196 args=(2, 2, 4, 49, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, true)
+Passed for mixed radix 2 test 0: N=72 args=(3, 2, 8, 9, MinimalFFT.fftr2!, MinimalFFT.fftr3!, 1, 1, true)
+Passed for mixed radix 2 test 0: N=6400 args=(8, 2, 256, 25, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for mixed radix 2 test 0: N=6400 args=(2, 8, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for mixed radix 2 test 0: N=80 args=(4, 1, 16, 5, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for mixed radix 2 test 0: N=56 args=(3, 1, 8, 7, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, true)
+Passed for mixed radix 2 test 0: N=100 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for mixed radix 2 test 0: N=147 args=(2, 1, 49, 3, MinimalFFT.fftr7!, MinimalFFT.fftr3!, 1, 1, true)
+Passed for mixed radix 2 test 0: N=72 args=(2, 3, 9, 8, MinimalFFT.fftr3!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for mixed radix 2 test 0: N=6400 args=(2, 8, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for mixed radix 2 test 0: N=80 args=(4, 1, 16, 5, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for mixed radix 2 test 0: N=56 args=(3, 1, 8, 7, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, true)
+Passed for mixed radix 2 test 0: N=100 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for mixed radix 2 test 1 timed: N=100 time=1.40e-06 args=(2, 2, 4, 25, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=7.108
+Passed for mixed radix 2 test 1 timed: N=100 time=1.46e-06 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=7.290
+Passed for mixed radix 2 test 1 timed: N=196 time=2.74e-06 args=(2, 2, 4, 49, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, false) factor_ref=7.194
+Passed for mixed radix 2 test 1 timed: N=72 time=1.08e-06 args=(3, 2, 8, 9, MinimalFFT.fftr2!, MinimalFFT.fftr3!, 1, 1, false) factor_ref=7.260
+Passed for mixed radix 2 test 1 timed: N=6400 time=8.84e-05 args=(8, 2, 256, 25, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=3.304
+Passed for mixed radix 2 test 1 timed: N=6400 time=6.33e-05 args=(2, 8, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=3.123
+Passed for mixed radix 2 test 1 timed: N=80 time=1.02e-06 args=(4, 1, 16, 5, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=6.390
+Passed for mixed radix 2 test 1 timed: N=56 time=8.05e-07 args=(3, 1, 8, 7, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, false) factor_ref=7.052
+Passed for mixed radix 2 test 1 timed: N=100 time=1.48e-06 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=7.292
+Passed for mixed radix 2 test 1 timed: N=147 time=2.10e-06 args=(2, 1, 49, 3, MinimalFFT.fftr7!, MinimalFFT.fftr3!, 1, 1, false) factor_ref=5.858
+Passed for mixed radix 2 test 1 timed: N=72 time=1.10e-06 args=(2, 3, 9, 8, MinimalFFT.fftr3!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=7.312
+Passed for mixed radix 2 test 1 timed: N=6400 time=6.72e-05 args=(2, 8, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=2.560
+Passed for mixed radix 2 test 1 timed: N=80 time=1.01e-06 args=(4, 1, 16, 5, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=6.285
+Passed for mixed radix 2 test 1 timed: N=56 time=8.01e-07 args=(3, 1, 8, 7, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, false) factor_ref=7.000
+Passed for mixed radix 2 test 1 timed: N=100 time=1.58e-06 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=7.729
+Passed for mixed radix 2 test 2: N=100 args=(1, 2, 4, 25, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 2 test 2: N=100 args=(2, 1, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for mixed radix 2 test 2: N=196 args=(1, 2, 4, 49, MinimalFFT.fftr4!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 2 test 2: N=6400 args=(4, 2, 256, 25, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 2 test 2: N=6400 args=(2, 4, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for mixed radix 2 test 2: N=80 args=(2, 1, 16, 5, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 2 test 2: N=100 args=(2, 1, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for mixed radix 2 test 2: N=147 args=(2, 1, 49, 3, MinimalFFT.fftr7!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for mixed radix 2 test 2: N=6400 args=(2, 4, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for mixed radix 2 test 2: N=80 args=(2, 1, 16, 5, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 2 test 2: N=100 args=(2, 1, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for mixed radix 2 test 3: N=72 args=(1, 2, 8, 9, MinimalFFT.fftr8!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for mixed radix 2 test 3: N=56 args=(1, 1, 8, 7, MinimalFFT.fftr8!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 2 test 3: N=147 args=(2, 1, 49, 3, MinimalFFT.fftr7!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for mixed radix 2 test 3: N=72 args=(2, 1, 9, 8, MinimalFFT.fftr3!, MinimalFFT.fftr8!, 1, 1, false)
+Passed for mixed radix 2 test 3: N=56 args=(1, 1, 8, 7, MinimalFFT.fftr8!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 2 test 4: N=100 args=(2, 2, 4, 25, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 2 test 4: N=100 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false)
+Passed for mixed radix 2 test 4: N=196 args=(2, 2, 4, 49, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 2 test 4: N=72 args=(3, 1, 8, 9, MinimalFFT.fftr2!, MinimalFFT.fftr9!, 1, 1, false)
+Passed for mixed radix 2 test 4: N=6400 args=(8, 2, 256, 25, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 2 test 4: N=6400 args=(2, 8, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false)
+Passed for mixed radix 2 test 4: N=80 args=(4, 1, 16, 5, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 2 test 4: N=56 args=(3, 1, 8, 7, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 2 test 4: N=100 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false)
+Passed for mixed radix 2 test 4: N=72 args=(1, 3, 9, 8, MinimalFFT.fftr9!, MinimalFFT.fftr2!, 1, 1, false)
+Passed for mixed radix 2 test 4: N=6400 args=(2, 8, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false)
+Passed for mixed radix 2 test 4: N=80 args=(4, 1, 16, 5, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 2 test 4: N=56 args=(3, 1, 8, 7, MinimalFFT.fftr2!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 2 test 4: N=100 args=(2, 2, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false)
+Passed for mixed radix 2 test 5: N=100 args=(1, 2, 4, 25, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 2 test 5: N=100 args=(2, 1, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for mixed radix 2 test 5: N=196 args=(1, 2, 4, 49, MinimalFFT.fftr4!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 2 test 5: N=6400 args=(4, 2, 256, 25, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 2 test 5: N=6400 args=(2, 4, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for mixed radix 2 test 5: N=80 args=(2, 1, 16, 5, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 2 test 5: N=100 args=(2, 1, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for mixed radix 2 test 5: N=6400 args=(2, 4, 25, 256, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for mixed radix 2 test 5: N=80 args=(2, 1, 16, 5, MinimalFFT.fftr4!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 2 test 5: N=100 args=(2, 1, 25, 4, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for mixed radix 2 test 6: N=72 args=(1, 1, 8, 9, MinimalFFT.fftr8!, MinimalFFT.fftr9!, 1, 1, false)
+Passed for mixed radix 2 test 6: N=56 args=(1, 1, 8, 7, MinimalFFT.fftr8!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 2 test 6: N=72 args=(1, 1, 9, 8, MinimalFFT.fftr9!, MinimalFFT.fftr8!, 1, 1, false)
+Passed for mixed radix 2 test 6: N=56 args=(1, 1, 8, 7, MinimalFFT.fftr8!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 3 test 0: N=2205 args=(2, 1, 2, 9, 5, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, true)
+Passed for prime factor 3 test 0: N=2205 args=(2, 2, 1, 9, 49, 5, MinimalFFT.fftr3!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for prime factor 3 test 0: N=2205 args=(1, 2, 2, 5, 9, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, true)
+Passed for prime factor 3 test 0: N=2205 args=(2, 1, 2, 49, 5, 9, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, true)
+Passed for prime factor 3 test 0: N=1400 args=(3, 1, 2, 8, 7, 25, MinimalFFT.fftr2!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for prime factor 3 test 0: N=1400 args=(1, 2, 3, 7, 25, 8, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for prime factor 3 test 0: N=30 args=(1, 1, 1, 2, 3, 5, MinimalFFT.fftr2!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for prime factor 3 test 0: N=30 args=(1, 1, 1, 2, 5, 3, MinimalFFT.fftr2!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, true)
+Passed for prime factor 3 test 0: N=30 args=(1, 1, 1, 3, 2, 5, MinimalFFT.fftr3!, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for prime factor 3 test 0: N=30 args=(1, 1, 1, 3, 5, 2, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for prime factor 3 test 0: N=960 args=(6, 1, 1, 64, 3, 5, MinimalFFT.fftr2!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for prime factor 3 test 0: N=960 args=(1, 1, 6, 3, 5, 64, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for prime factor 3 test 0: N=960 args=(1, 6, 1, 5, 64, 3, MinimalFFT.fftr5!, MinimalFFT.fftr2!, MinimalFFT.fftr3!, 1, 1, true)
+Passed for prime factor 3 test 0: N=826875 args=(3, 4, 2, 27, 625, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, true)
+Passed for prime factor 3 test 0: N=826875 args=(4, 3, 2, 625, 27, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, true)
+Passed for prime factor 3 test 0: N=826875 args=(2, 3, 4, 49, 27, 625, MinimalFFT.fftr7!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for prime factor 3 test 0: N=826875 args=(2, 4, 3, 49, 625, 27, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, true)
+Passed for prime factor 3 test 1: N=2205 time=3.39e-05 args=(2, 1, 2, 9, 5, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false) factor_ref=5.069
+Passed for prime factor 3 test 1: N=2205 time=3.37e-05 args=(2, 2, 1, 9, 49, 5, MinimalFFT.fftr3!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=4.048
+Passed for prime factor 3 test 1: N=2205 time=3.39e-05 args=(1, 2, 2, 5, 9, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, false) factor_ref=5.191
+Passed for prime factor 3 test 1: N=2205 time=3.36e-05 args=(2, 1, 2, 49, 5, 9, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, false) factor_ref=5.101
+Passed for prime factor 3 test 1: N=1400 time=2.25e-05 args=(3, 1, 2, 8, 7, 25, MinimalFFT.fftr2!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=4.302
+Passed for prime factor 3 test 1: N=1400 time=2.24e-05 args=(1, 2, 3, 7, 25, 8, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=4.326
+Passed for prime factor 3 test 1: N=30 time=8.01e-07 args=(1, 1, 1, 2, 3, 5, MinimalFFT.fftr2!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=10.842
+Passed for prime factor 3 test 1: N=30 time=7.94e-07 args=(1, 1, 1, 2, 5, 3, MinimalFFT.fftr2!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, false) factor_ref=11.549
+Passed for prime factor 3 test 1: N=30 time=7.79e-07 args=(1, 1, 1, 3, 2, 5, MinimalFFT.fftr3!, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=11.332
+Passed for prime factor 3 test 1: N=30 time=8.08e-07 args=(1, 1, 1, 3, 5, 2, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=11.750
+Passed for prime factor 3 test 1: N=960 time=1.59e-05 args=(6, 1, 1, 64, 3, 5, MinimalFFT.fftr2!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=7.609
+Passed for prime factor 3 test 1: N=960 time=1.59e-05 args=(1, 1, 6, 3, 5, 64, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=7.605
+Passed for prime factor 3 test 1: N=960 time=1.58e-05 args=(1, 6, 1, 5, 64, 3, MinimalFFT.fftr5!, MinimalFFT.fftr2!, MinimalFFT.fftr3!, 1, 1, false) factor_ref=7.641
+Passed for prime factor 3 test 1: N=826875 time=1.45e-02 args=(3, 4, 2, 27, 625, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false) factor_ref=2.252
+Passed for prime factor 3 test 1: N=826875 time=1.44e-02 args=(4, 3, 2, 625, 27, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, false) factor_ref=2.275
+Passed for prime factor 3 test 1: N=826875 time=1.49e-02 args=(2, 3, 4, 49, 27, 625, MinimalFFT.fftr7!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=2.343
+Passed for prime factor 3 test 1: N=826875 time=1.48e-02 args=(2, 4, 3, 49, 625, 27, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, false) factor_ref=2.316
+Passed for prime factor 3 test 2: N=2205 args=(2, 1, 2, 9, 5, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 3 test 2: N=2205 args=(2, 2, 1, 9, 49, 5, MinimalFFT.fftr3!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 3 test 2: N=2205 args=(1, 2, 2, 5, 9, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 3 test 2: N=2205 args=(2, 1, 2, 49, 5, 9, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for prime factor 3 test 2: N=960 args=(3, 1, 1, 64, 3, 5, MinimalFFT.fftr4!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 3 test 2: N=960 args=(1, 1, 3, 3, 5, 64, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for prime factor 3 test 2: N=960 args=(1, 3, 1, 5, 64, 3, MinimalFFT.fftr5!, MinimalFFT.fftr4!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for prime factor 3 test 2: N=826875 args=(3, 4, 2, 27, 625, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 3 test 2: N=826875 args=(4, 3, 2, 625, 27, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 3 test 2: N=826875 args=(2, 3, 4, 49, 27, 625, MinimalFFT.fftr7!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 3 test 2: N=826875 args=(2, 4, 3, 49, 625, 27, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for prime factor 3 test 3: N=2205 args=(2, 1, 2, 9, 5, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 3 test 3: N=2205 args=(2, 2, 1, 9, 49, 5, MinimalFFT.fftr3!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 3 test 3: N=2205 args=(1, 2, 2, 5, 9, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 3 test 3: N=2205 args=(2, 1, 2, 49, 5, 9, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for prime factor 3 test 3: N=1400 args=(1, 1, 2, 8, 7, 25, MinimalFFT.fftr8!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 3 test 3: N=1400 args=(1, 2, 1, 7, 25, 8, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr8!, 1, 1, false)
+Passed for prime factor 3 test 3: N=960 args=(2, 1, 1, 64, 3, 5, MinimalFFT.fftr8!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 3 test 3: N=960 args=(1, 1, 2, 3, 5, 64, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr8!, 1, 1, false)
+Passed for prime factor 3 test 3: N=960 args=(1, 2, 1, 5, 64, 3, MinimalFFT.fftr5!, MinimalFFT.fftr8!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for prime factor 3 test 3: N=826875 args=(3, 4, 2, 27, 625, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 3 test 3: N=826875 args=(4, 3, 2, 625, 27, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 3 test 3: N=826875 args=(2, 3, 4, 49, 27, 625, MinimalFFT.fftr7!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 3 test 3: N=826875 args=(2, 4, 3, 49, 625, 27, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for prime factor 3 test 4: N=2205 args=(1, 1, 2, 9, 5, 49, MinimalFFT.fftr9!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 3 test 4: N=2205 args=(1, 2, 1, 9, 49, 5, MinimalFFT.fftr9!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 3 test 4: N=2205 args=(1, 1, 2, 5, 9, 49, MinimalFFT.fftr5!, MinimalFFT.fftr9!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 3 test 4: N=2205 args=(2, 1, 1, 49, 5, 9, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr9!, 1, 1, false)
+Passed for prime factor 3 test 4: N=1400 args=(3, 1, 2, 8, 7, 25, MinimalFFT.fftr2!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 3 test 4: N=1400 args=(1, 2, 3, 7, 25, 8, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false)
+Passed for prime factor 3 test 5: N=2205 args=(1, 1, 2, 9, 5, 49, MinimalFFT.fftr9!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 3 test 5: N=2205 args=(1, 2, 1, 9, 49, 5, MinimalFFT.fftr9!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 3 test 5: N=2205 args=(1, 1, 2, 5, 9, 49, MinimalFFT.fftr5!, MinimalFFT.fftr9!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 3 test 5: N=2205 args=(2, 1, 1, 49, 5, 9, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr9!, 1, 1, false)
+Passed for prime factor 3 test 6: N=2205 args=(1, 1, 2, 9, 5, 49, MinimalFFT.fftr9!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 3 test 6: N=2205 args=(1, 2, 1, 9, 49, 5, MinimalFFT.fftr9!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 3 test 6: N=2205 args=(1, 1, 2, 5, 9, 49, MinimalFFT.fftr5!, MinimalFFT.fftr9!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for prime factor 3 test 6: N=2205 args=(2, 1, 1, 49, 5, 9, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr9!, 1, 1, false)
+Passed for prime factor 3 test 6: N=1400 args=(1, 1, 2, 8, 7, 25, MinimalFFT.fftr8!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for prime factor 3 test 6: N=1400 args=(1, 2, 1, 7, 25, 8, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr8!, 1, 1, false)
+Passed for mixed radix 3 test 0: N=2205 args=(2, 1, 2, 9, 5, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=2205 args=(2, 2, 1, 9, 49, 5, MinimalFFT.fftr3!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=2205 args=(1, 2, 2, 5, 9, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=2205 args=(2, 1, 2, 49, 5, 9, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=1400 args=(3, 1, 2, 8, 7, 25, MinimalFFT.fftr2!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=1400 args=(1, 2, 3, 7, 25, 8, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=30 args=(1, 1, 1, 2, 3, 5, MinimalFFT.fftr2!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=30 args=(1, 1, 1, 2, 5, 3, MinimalFFT.fftr2!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=30 args=(1, 1, 1, 3, 2, 5, MinimalFFT.fftr3!, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=30 args=(1, 1, 1, 3, 5, 2, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=960 args=(6, 1, 1, 64, 3, 5, MinimalFFT.fftr2!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=960 args=(1, 1, 6, 3, 5, 64, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=960 args=(1, 6, 1, 5, 64, 3, MinimalFFT.fftr5!, MinimalFFT.fftr2!, MinimalFFT.fftr3!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=826875 args=(3, 4, 2, 27, 625, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=826875 args=(4, 3, 2, 625, 27, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=826875 args=(2, 3, 4, 49, 27, 625, MinimalFFT.fftr7!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, true)
+Passed for mixed radix 3 test 0: N=826875 args=(2, 4, 3, 49, 625, 27, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, true)
+Passed for mixed radix 3 test 1 timed: N=2205 time=3.53e-05 args=(2, 1, 2, 9, 5, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false) factor_ref=5.402
+Passed for mixed radix 3 test 1 timed: N=2205 time=3.30e-05 args=(2, 2, 1, 9, 49, 5, MinimalFFT.fftr3!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=5.019
+Passed for mixed radix 3 test 1 timed: N=2205 time=3.35e-05 args=(1, 2, 2, 5, 9, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, false) factor_ref=5.121
+Passed for mixed radix 3 test 1 timed: N=2205 time=3.35e-05 args=(2, 1, 2, 49, 5, 9, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, false) factor_ref=3.302
+Passed for mixed radix 3 test 1 timed: N=1400 time=2.24e-05 args=(3, 1, 2, 8, 7, 25, MinimalFFT.fftr2!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=5.360
+Passed for mixed radix 3 test 1 timed: N=1400 time=2.25e-05 args=(1, 2, 3, 7, 25, 8, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=5.317
+Passed for mixed radix 3 test 1 timed: N=30 time=1.03e-06 args=(1, 1, 1, 2, 3, 5, MinimalFFT.fftr2!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=15.053
+Passed for mixed radix 3 test 1 timed: N=30 time=1.02e-06 args=(1, 1, 1, 2, 5, 3, MinimalFFT.fftr2!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, false) factor_ref=14.694
+Passed for mixed radix 3 test 1 timed: N=30 time=1.03e-06 args=(1, 1, 1, 3, 2, 5, MinimalFFT.fftr3!, MinimalFFT.fftr2!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=14.805
+Passed for mixed radix 3 test 1 timed: N=30 time=1.03e-06 args=(1, 1, 1, 3, 5, 2, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=15.202
+Passed for mixed radix 3 test 1 timed: N=960 time=1.65e-05 args=(6, 1, 1, 64, 3, 5, MinimalFFT.fftr2!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=7.213
+Passed for mixed radix 3 test 1 timed: N=960 time=1.65e-05 args=(1, 1, 6, 3, 5, 64, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false) factor_ref=7.730
+Passed for mixed radix 3 test 1 timed: N=960 time=1.68e-05 args=(1, 6, 1, 5, 64, 3, MinimalFFT.fftr5!, MinimalFFT.fftr2!, MinimalFFT.fftr3!, 1, 1, false) factor_ref=5.743
+Passed for mixed radix 3 test 1 timed: N=826875 time=1.34e-02 args=(3, 4, 2, 27, 625, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false) factor_ref=2.115
+Passed for mixed radix 3 test 1 timed: N=826875 time=1.31e-02 args=(4, 3, 2, 625, 27, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, false) factor_ref=2.047
+Passed for mixed radix 3 test 1 timed: N=826875 time=1.39e-02 args=(2, 3, 4, 49, 27, 625, MinimalFFT.fftr7!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, false) factor_ref=2.195
+Passed for mixed radix 3 test 1 timed: N=826875 time=1.34e-02 args=(2, 4, 3, 49, 625, 27, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, false) factor_ref=2.078
+Passed for mixed radix 3 test 2: N=2205 args=(2, 1, 2, 9, 5, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 3 test 2: N=2205 args=(2, 2, 1, 9, 49, 5, MinimalFFT.fftr3!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 3 test 2: N=2205 args=(1, 2, 2, 5, 9, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 3 test 2: N=2205 args=(2, 1, 2, 49, 5, 9, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for mixed radix 3 test 2: N=960 args=(3, 1, 1, 64, 3, 5, MinimalFFT.fftr4!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 3 test 2: N=960 args=(1, 1, 3, 3, 5, 64, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr4!, 1, 1, false)
+Passed for mixed radix 3 test 2: N=960 args=(1, 3, 1, 5, 64, 3, MinimalFFT.fftr5!, MinimalFFT.fftr4!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for mixed radix 3 test 2: N=826875 args=(3, 4, 2, 27, 625, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 3 test 2: N=826875 args=(4, 3, 2, 625, 27, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 3 test 2: N=826875 args=(2, 3, 4, 49, 27, 625, MinimalFFT.fftr7!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 3 test 2: N=826875 args=(2, 4, 3, 49, 625, 27, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for mixed radix 3 test 3: N=2205 args=(2, 1, 2, 9, 5, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 3 test 3: N=2205 args=(2, 2, 1, 9, 49, 5, MinimalFFT.fftr3!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 3 test 3: N=2205 args=(1, 2, 2, 5, 9, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 3 test 3: N=2205 args=(2, 1, 2, 49, 5, 9, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for mixed radix 3 test 3: N=1400 args=(1, 1, 2, 8, 7, 25, MinimalFFT.fftr8!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 3 test 3: N=1400 args=(1, 2, 1, 7, 25, 8, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr8!, 1, 1, false)
+Passed for mixed radix 3 test 3: N=960 args=(2, 1, 1, 64, 3, 5, MinimalFFT.fftr8!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 3 test 3: N=960 args=(1, 1, 2, 3, 5, 64, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr8!, 1, 1, false)
+Passed for mixed radix 3 test 3: N=960 args=(1, 2, 1, 5, 64, 3, MinimalFFT.fftr5!, MinimalFFT.fftr8!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for mixed radix 3 test 3: N=826875 args=(3, 4, 2, 27, 625, 49, MinimalFFT.fftr3!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 3 test 3: N=826875 args=(4, 3, 2, 625, 27, 49, MinimalFFT.fftr5!, MinimalFFT.fftr3!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 3 test 3: N=826875 args=(2, 3, 4, 49, 27, 625, MinimalFFT.fftr7!, MinimalFFT.fftr3!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 3 test 3: N=826875 args=(2, 4, 3, 49, 625, 27, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr3!, 1, 1, false)
+Passed for mixed radix 3 test 4: N=2205 args=(1, 1, 2, 9, 5, 49, MinimalFFT.fftr9!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 3 test 4: N=2205 args=(1, 2, 1, 9, 49, 5, MinimalFFT.fftr9!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 3 test 4: N=2205 args=(1, 1, 2, 5, 9, 49, MinimalFFT.fftr5!, MinimalFFT.fftr9!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 3 test 4: N=2205 args=(2, 1, 1, 49, 5, 9, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr9!, 1, 1, false)
+Passed for mixed radix 3 test 4: N=1400 args=(3, 1, 2, 8, 7, 25, MinimalFFT.fftr2!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 3 test 4: N=1400 args=(1, 2, 3, 7, 25, 8, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr2!, 1, 1, false)
+Passed for mixed radix 3 test 5: N=2205 args=(1, 1, 2, 9, 5, 49, MinimalFFT.fftr9!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 3 test 5: N=2205 args=(1, 2, 1, 9, 49, 5, MinimalFFT.fftr9!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 3 test 5: N=2205 args=(1, 1, 2, 5, 9, 49, MinimalFFT.fftr5!, MinimalFFT.fftr9!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 3 test 5: N=2205 args=(2, 1, 1, 49, 5, 9, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr9!, 1, 1, false)
+Passed for mixed radix 3 test 6: N=2205 args=(1, 1, 2, 9, 5, 49, MinimalFFT.fftr9!, MinimalFFT.fftr5!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 3 test 6: N=2205 args=(1, 2, 1, 9, 49, 5, MinimalFFT.fftr9!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 3 test 6: N=2205 args=(1, 1, 2, 5, 9, 49, MinimalFFT.fftr5!, MinimalFFT.fftr9!, MinimalFFT.fftr7!, 1, 1, false)
+Passed for mixed radix 3 test 6: N=2205 args=(2, 1, 1, 49, 5, 9, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr9!, 1, 1, false)
+Passed for mixed radix 3 test 6: N=1400 args=(1, 1, 2, 8, 7, 25, MinimalFFT.fftr8!, MinimalFFT.fftr7!, MinimalFFT.fftr5!, 1, 1, false)
+Passed for mixed radix 3 test 6: N=1400 args=(1, 2, 1, 7, 25, 8, MinimalFFT.fftr7!, MinimalFFT.fftr5!, MinimalFFT.fftr8!, 1, 1, false)
+Passed for execute_plan timed: N=100 time=1.48e-06 args=(1, 1, 1) factor_ref=7.442
+Passed for execute_plan inverse timed: N=100 time=1.51e-06 args=(1, 1, 1) factor_ref=6.705
+Passed for execute_plan timed: N=196 time=2.70e-06 args=(1, 1, 1) factor_ref=7.052
+Passed for execute_plan inverse timed: N=196 time=2.74e-06 args=(1, 1, 1) factor_ref=5.213
+Passed for execute_plan timed: N=72 time=2.06e-06 args=(1, 1, 1) factor_ref=13.834
+Passed for execute_plan inverse timed: N=72 time=2.06e-06 args=(1, 1, 1) factor_ref=12.259
+Passed for execute_plan timed: N=6400 time=8.24e-05 args=(1, 1, 1) factor_ref=4.138
+Passed for execute_plan inverse timed: N=6400 time=8.23e-05 args=(1, 1, 1) factor_ref=3.844
+Passed for execute_plan timed: N=80 time=1.49e-06 args=(1, 1, 1) factor_ref=9.437
+Passed for execute_plan inverse timed: N=80 time=1.50e-06 args=(1, 1, 1) factor_ref=8.322
+Passed for execute_plan timed: N=56 time=1.55e-06 args=(1, 1, 1) factor_ref=13.275
+Passed for execute_plan inverse timed: N=56 time=1.59e-06 args=(1, 1, 1) factor_ref=12.594
+Passed for execute_plan timed: N=100 time=1.49e-06 args=(1, 1, 1) factor_ref=7.290
+Passed for execute_plan inverse timed: N=100 time=1.53e-06 args=(1, 1, 1) factor_ref=6.737
+Passed for execute_plan timed: N=147 time=1.93e-06 args=(1, 1, 1) factor_ref=5.283
+Passed for execute_plan inverse timed: N=147 time=1.96e-06 args=(1, 1, 1) factor_ref=3.346
+Passed for execute_plan timed: N=72 time=2.08e-06 args=(1, 1, 1) factor_ref=13.778
+Passed for execute_plan inverse timed: N=72 time=2.07e-06 args=(1, 1, 1) factor_ref=12.109
+Passed for execute_plan timed: N=2205 time=5.28e-05 args=(1, 1, 1) factor_ref=7.932
+Passed for execute_plan inverse timed: N=2205 time=5.34e-05 args=(1, 1, 1) factor_ref=6.453
+Passed for execute_plan timed: N=1400 time=3.65e-05 args=(1, 1, 1) factor_ref=8.826
+Passed for execute_plan inverse timed: N=1400 time=3.49e-05 args=(1, 1, 1) factor_ref=7.781
+Passed for execute_plan timed: N=30 time=9.98e-07 args=(1, 1, 1) factor_ref=13.993
+Passed for execute_plan inverse timed: N=30 time=1.02e-06 args=(1, 1, 1) factor_ref=12.464
+Passed for execute_plan timed: N=960 time=1.67e-05 args=(1, 1, 1) factor_ref=7.707
+Passed for execute_plan inverse timed: N=960 time=1.71e-05 args=(1, 1, 1) factor_ref=7.183
+Passed for execute_plan timed: N=826875 time=1.49e-02 args=(1, 1, 1) factor_ref=2.231
+Passed for execute_plan inverse timed: N=826875 time=1.49e-02 args=(1, 1, 1) factor_ref=2.030
+Passed for execute_plan timed: N=30030 time=1.62e-03 args=(1, 1, 1) factor_ref=12.133
+Passed for execute_plan inverse timed: N=30030 time=1.63e-03 args=(1, 1, 1) factor_ref=10.172
+448 tests passed.
+0 tests failed.

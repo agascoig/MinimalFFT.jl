@@ -21,7 +21,7 @@ function plan_1d(P, n, rd)
     fn_mp = (P, nf, b, e, f) -> begin
         ip = inner_plan(nf, b, e, f)
         if !haskey(P.ipd, rd)
-            P.ipd[rd] = Vector{inner_plan}()
+            P.ipd[rd] = Vector{inner_plan{typeof(f)}}()
         end
         push!(P.ipd[rd], ip)
     end
@@ -70,17 +70,22 @@ function execute_plan(P::MinimalPlan{U}, y::Vector{S}, x::Vector{T},
         inverse = bt(P, P_INVERSE)
         ipv = P.ipd[r]
         lf = length(ipv)
-        if lf == 1
-            y, x = ipv[1].fun(y, x, ipv[1].ns, ipv[1].exp, bp, instride, inverse)
+        fun1 = ipv[1].fun
+        ns1 = ipv[1].ns
+        if lf == 1 || lf>3
+            y, x = fun1(y, x, ns1, 1, bp, instride, inverse)
         elseif lf == 2
-            y, x = prime_factor!(y, x, ipv[1].exp, ipv[2].exp, ipv[1].ns, ipv[2].ns,
-                ipv[1].fun, ipv[2].fun, bp, instride, inverse)
+            ipv1=ipv[1]
+            ipv2=ipv[2]
+            y, x = prime_factor!(y, x, ipv1.exp, ipv2.exp, ns1, ipv2.ns,
+                fun1, ipv2.fun, bp, instride, inverse)
         elseif lf == 3
-            y, x = prime_factor!(y, x, ipv[1].exp, ipv[2].exp, ipv[3].exp,
-                ipv[1].ns, ipv[2].ns, ipv[3].ns, ipv[1].fun, ipv[2].fun, ipv[3].fun,
+            ipv1=ipv[1]
+            ipv2=ipv[2]
+            ipv3=ipv[3]
+            y, x = prime_factor!(y, x, ipv1.exp, ipv2.exp, ipv3.exp,
+                ns1, ipv2.ns, ipv3.ns, fun1, ipv2.fun, ipv3.fun,
                 bp, instride, inverse)
-        else
-            y, x = fft_bluestein!(y, x, ipv[1].ns, ipv[1].exp, bp, instride, inverse)
         end
         (y, x)
     end

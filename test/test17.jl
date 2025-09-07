@@ -226,5 +226,5 @@ end
 today_str = Dates.format(Dates.today(), "yyyymmdd")
 time_str = Dates.format(Dates.now(), "HHMMSS")
 #do_tests()
-@write_fn("../tmp/test17_$today_str" * "_" * "$time_str.txt", do_tests())
+@write_fn("../profile/test17_$today_str" * "_" * "$time_str.txt", do_tests())
 
