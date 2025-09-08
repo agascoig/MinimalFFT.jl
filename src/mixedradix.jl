@@ -2,13 +2,11 @@
 
 import LinearAlgebra: transpose!
 
-function reweight!(Y::Vector{T}, L::Int64, M::Int64,
+function reweight!(Y::Vector{T}, N1::Int64, N2::Int64,
     bp::Int64, instride::Int64, inverse::Bool) where {T<:Complex}
-    # L: num rows, M: num columns
-    N = L * M
-    @assert N == length(Y) "Lengths must be consistent length(Y)=$(length(Y)) N=$N=$L*$M."
-
     @inbounds begin
+        N = N1 * N2
+        @assert N == length(Y) "Lengths must be consistent length(Y)=$(length(Y)) N=$N=$N1*$N2."
         W = one(T)
         W_step = one(T)
         C = inverse ? exp(2im * pi / N) : exp(-2im * pi / N)
@@ -19,7 +17,7 @@ function reweight!(Y::Vector{T}, L::Int64, M::Int64,
             l += 1
             Y[bp+i*instride] *= W
             W *= W_step
-            if l == L
+            if l == N1
                 l = 0
                 W = one(T)
                 W_step = B
@@ -32,13 +30,13 @@ end
 
 function mixed_radix!(Y::Vector{T}, X::Vector{T}, e1::Int64, e2::Int64, N1::Int64, N2::Int64, fft1!, fft2!,
     bp::Int64, instride::Int64, inverse::Bool) where {T<:Complex}
-    N = N1 * N2
-    Ns = (N1, N2)
-
-    @assert length(X) == length(Y) "Y and X must be same size"
-    @assert N == length(X) "Incorrect rectangular decomposition, N=$N L=$L M=$M"
-
     @inbounds begin
+        N = N1 * N2
+        Ns = (N1, N2)
+
+        @assert length(X) == length(Y) "Y and X must be same size"
+        @assert N == length(X) "Incorrect rectangular decomposition"
+
         Y2D_LM = reshape(Y, (N1, N2))
         X2D_LM = reshape(X, (N1, N2))
 
@@ -60,14 +58,14 @@ function mixed_radix!(Y::Vector{T}, X::Vector{T}, e1::Int64, e2::Int64, N1::Int6
     end
 end
 
-function mixed_radix_weight_2_of_3(y3d::Array{T,S}, N::Int64, L::Int64, d::Int64,
+function mixed_radix_weight_2_of_3!(y3d::Array{T,S}, N::Int64, N1::Int64, d::Int64,
     Ns::Tuple{Vararg{Int64}}, bp::Int64, instride::Int64, inverse::Bool) where {T<:Complex,S}
     # the weight is the same for all elements along d
     # L is inner dimension
     @inbounds begin
         y = reshape(y3d, length(y3d))
         nd = 3
-        strides = [instride*prod(Ns[1:i-1]) for i = 1:nd]
+        strides = [instride * prod(Ns[1:i-1]) for i = 1:nd]
         counts = zeros(Int64, nd)
         vlength = Ns[d]
 
@@ -84,7 +82,7 @@ function mixed_radix_weight_2_of_3(y3d::Array{T,S}, N::Int64, L::Int64, d::Int64
                 y[bp+i*stride] *= W
             end
             W *= W_step
-            if l == L
+            if l == N1
                 l = 0
                 W = one(T)
                 W_step = B
@@ -105,21 +103,21 @@ function mixed_radix!(Y::Vector{T}, X::Vector{T},
     bp::Int64, instride::Int64, inverse::Bool) where {T<:Complex}
     @inbounds begin
         N = N1 * N2 * N3
-        S123 = (N1, N2, N3)
+        Ns = (N1, N2, N3)
 
-        X123 = reshape(X, S123)
-        Y123 = reshape(Y, S123)
+        X123 = reshape(X, Ns)
+        Y123 = reshape(Y, Ns)
 
-        Y123, X123 = do_fft(Y123, X123, fft3!, S123, e3, 3, bp, instride, inverse)
+        Y123, X123 = do_fft(Y123, X123, fft3!, Ns, e3, 3, bp, instride, inverse)
 
-        mixed_radix_weight_2_of_3(Y123, N2 * N3, N2, 1, S123, bp, instride, inverse)
+        mixed_radix_weight_2_of_3!(Y123, N2 * N3, N2, 1, Ns, bp, instride, inverse)
 
-        X123, Y123 = do_fft(X123, Y123, fft2!, S123, e2, 2, bp, instride, inverse)
+        X123, Y123 = do_fft(X123, Y123, fft2!, Ns, e2, 2, bp, instride, inverse)
 
-        mixed_radix_weight_2_of_3(X123, N1 * N2 * N3, N1, 2, S123, bp, instride, inverse)
-        mixed_radix_weight_2_of_3(X123, N1 * N2, N1, 3, S123, bp, instride, inverse)
+        mixed_radix_weight_2_of_3!(X123, N1 * N2 * N3, N1, 2, Ns, bp, instride, inverse)
+        mixed_radix_weight_2_of_3!(X123, N1 * N2, N1, 3, Ns, bp, instride, inverse)
 
-        Y123, X123 = do_fft(Y123, X123, fft1!, S123, e1, 1, bp, instride, inverse)
+        Y123, X123 = do_fft(Y123, X123, fft1!, Ns, e1, 1, bp, instride, inverse)
 
         X321 = reshape(X123, (N3, N2, N1))
 
@@ -131,4 +129,3 @@ function mixed_radix!(Y::Vector{T}, X::Vector{T},
         X, Y
     end
 end
-

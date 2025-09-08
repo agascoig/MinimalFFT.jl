@@ -44,7 +44,15 @@ import AbstractFFTs: Plan, ScaledPlan, plan_fft, plan_fft!, plan_bfft, plan_bfft
     AdjointStyle, AdjointPlan, FFTAdjointStyle, RFFTAdjointStyle, IRFFTAdjointStyle
 import LinearAlgebra: mul!, rmul!, lmul!
 
+
+include("stockham.jl")
+include("direct.jl")
+include("mixedradix.jl")
+include("pfa.jl")
+include("bluestein.jl")
+include("rader.jl")
 include("plan.jl")
+include("indexer.jl")
 
 function min_plan(S::Type, D::Type, x, region, flags)
     sx = size(x)
@@ -91,29 +99,6 @@ size(P::MinimalPlan{T}) where {T<:Number} = P.n # the FFT input size
 
 out_N_rfft(P::MinimalPlan{T}) where {T<:Number} = (P.n[first(P.region)] ÷ 2) + 1
 out_N_irfft(P::MinimalPlan{T}) where {T<:Number} = (P.n[first(P.region)] << 1) - 2 + (bt(P, P_ODD))
-
-function mul!(y::Vector{T}, P::MinimalPlan{S}, x::Vector{T}) where {T<:Complex,S<:Number}
-    @inbounds begin
-        @assert P.n == size(x) "The plan input size must match input x dimensions."
-        @assert !bt(P, P_REAL) "Not supported. Use mul! for real plans with real buffer."
-
-        ix = copy(x)
-
-        orig_y = y
-
-        y, ix = execute_plan(P, y, ix, 1, 1, 1)
-
-        if y !== orig_y
-            orig_y .= y
-        end
-
-        if bt(P, P_INPLACE)
-            x .= bt(P, P_ISBFFT) ⊻ bt(P, P_INVERSE) ? scaling_factor(P) * y : y
-        end
-
-        orig_y
-    end
-end
 
 function mul!(y::Array{R,D}, P::MinimalPlan{S}, x::Array{T,E}) where {R<:Number,S<:Number,T<:Number,D,E}
     @inbounds begin
@@ -223,13 +208,5 @@ function *(P::MinimalPlan{T}, x::Array{T,N}) where {T<:Number,N}
     mul!(y, P, x)
     y
 end
-
-include("indexer.jl")
-include("stockham.jl")
-include("direct.jl")
-include("mixedradix.jl")
-include("pfa.jl")
-include("bluestein.jl")
-include("rader.jl")
 
 end # module
