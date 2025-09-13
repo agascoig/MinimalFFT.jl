@@ -88,8 +88,8 @@ function mixed_radix_weight_2_of_3!(y3d::Array{T,S}, N::Int64, N1::Int64, d::Int
                 W_step = B
                 B *= C
             end
-            stop, bp = indexer_count(d, nd, counts, strides, bp, Ns)
-            if stop
+            bp = indexer_count(d, nd, counts, strides, bp, Ns)
+            if bp == 0
                 break
             end
         end

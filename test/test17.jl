@@ -174,6 +174,8 @@ function do_tests()
         driver(d,[8, 3, 5, 7], false, pc, fc, false, stockham, factor_1, "stockham test 5")
         driver(d,[8, 9, 5, 7], false, pc, fc, false, stockham, factor_1, "stockham test 6")
 
+        empty!(d)
+
         driver(d,[2], true, pc, fc, false, stockham, factor_1, "timed stockham test 0")
         driver(d,[3], true, pc, fc, false, stockham, factor_1, "timed stockham test 1")
         driver(d,[4], true, pc, fc, false, stockham, factor_1, "timed stockham test 2")
@@ -181,6 +183,8 @@ function do_tests()
         driver(d,[7], true, pc, fc, false, stockham, factor_1, "timed stockham test 4")
         driver(d,[8], true, pc, fc, false, stockham, factor_1, "timed stockham test 5")
         driver(d,[9], true, pc, fc, false, stockham, factor_1, "timed stockham test 6")
+
+        empty!(d)
 
         driver(d,[2, 3, 5, 7], false, pc, fc, true, stockham, factor_1, "stockham inverse test 0")
         driver(d,[2, 3, 5, 7], false, pc, fc, true, stockham, factor_1, "stockham inverse test 1")
@@ -190,12 +194,16 @@ function do_tests()
         driver(d,[8, 3, 5, 7], false, pc, fc, true, stockham, factor_1, "stockham inverse test 5")
         driver(d,[8, 9, 5, 7], false, pc, fc, true, stockham, factor_1, "stockham inverse test 6")
 
+        empty!(d)
+
         driver(d,[2, 3, 5, 7], false, pc, fc, true, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 0")
         driver(d,[2, 3, 5, 7], true, pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 1 timed")
         driver(d,[4, 3, 5, 7], false, pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 2")
         driver(d,[8, 3, 5, 7], false, pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 3")
         driver(d,[2, 9, 5, 7], false, pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 4")
         driver(d,[8, 9, 5, 7], false, pc, fc, false, MinimalFFT.prime_factor!, factor_2, "prime factor 2 test 5")
+
+        empty!(d)
 
         driver(d,[2, 3, 5, 7], false, pc, fc, true, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 0")
         driver(d,[2, 3, 5, 7], true, pc, fc, false, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 1 timed")
@@ -204,12 +212,16 @@ function do_tests()
         driver(d,[2, 9, 5, 7], false, pc, fc, false, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 4")
         driver(d,[8, 9, 5, 7], false, pc, fc, false, MinimalFFT.mixed_radix!, factor_2, "mixed radix 2 test 5")
 
+        empty!(d)
+
         driver(d,[2, 3, 5, 7], false, pc, fc, true, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 0")
         driver(d,[2, 3, 5, 7], true, pc, fc, false, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 1")
         driver(d,[4, 3, 5, 7], false, pc, fc, false, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 2")
         driver(d,[8, 3, 5, 7], false, pc, fc, false, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 3")
         driver(d,[2, 9, 5, 7], false, pc, fc, false, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 4")
         driver(d,[8, 9, 5, 7], false, pc, fc, false, MinimalFFT.prime_factor!, factor_3, "prime factor 3 test 5")
+
+        empty!(d)
 
         driver(d,[2, 3, 5, 7], false, pc, fc, true, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 0")
         driver(d,[2, 3, 5, 7], true, pc, fc, false, MinimalFFT.mixed_radix!, factor_3, "mixed radix 3 test 1 timed")

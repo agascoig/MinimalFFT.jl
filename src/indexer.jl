@@ -35,8 +35,8 @@ function do_1d(P::MinimalPlan{T}, oy::Array{F,D}, ix::Array{F,D},
                 flipped = true
                 y, x = x, y
             end
-            stop, bp = indexer_count(r, nd, counts, strides, bp, Ns)
-            if stop
+            bp = indexer_count(r, nd, counts, strides, bp, Ns)
+            if bp == 0
                 return flipped ? (ix, oy) : (oy, ix)
             end
         end
@@ -89,8 +89,8 @@ function do_1d(oy::Array{F,D}, ix::Array{F,D},
                 flipped = true
                 y, x = x, y
             end
-            stop, bp = indexer_count(r, nd, counts, strides, bp, Ns)
-            if stop
+            bp = indexer_count(r, nd, counts, strides, bp, Ns)
+            if bp == 0
                 return flipped ? (ix, oy) : (oy, ix)
             end
         end
@@ -152,7 +152,7 @@ function indexer_count(r::Int64, nd::Int64, counts::Vector{Int64},
             end
             i += 1
         end
-        return (i > nd, bp)
+        return (i > nd) ? 0 : bp
     end
 end
 
