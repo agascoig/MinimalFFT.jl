@@ -8,12 +8,12 @@
 function fftr2!(Y::Vector{T}, X::Vector{T},
     N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
     @inbounds begin
-    l = N ÷ 2
-    m = 1
+        l = N ÷ 2
+        m = 1
 
-    u = 2 * pi / 2
+        u = 2 * pi / 2
 
-    pmim = inverse ? 1.0im : -1.0im
+        pmim = inverse ? 1.0im : -1.0im
 
         for t = 1:e1
             w_l = exp(pmim * u / l)
@@ -38,21 +38,22 @@ end
 function fftr3!(Y::Vector{T}, X::Vector{T},
     N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
     @inbounds begin
-    l = N ÷ 3
-    m = 1
+        l = N ÷ 3
+        m = 1
 
-    u = 2 * pi / 3
+        u = 2 * pi / 3
 
-    c30 = 0.5
-    c31 = sin(pi / 3)
+        c30 = 0.5
+        c31 = sin(pi / 3)
 
-    r = inverse ? u : -u
-    pmim = inverse ? 1.0im : -1.0im
+        r = inverse ? u : -u
+        pmim = inverse ? 1.0im : -1.0im
 
         for t = 1:e1
             w_l = exp(im * r / l)
             w = one(T)
             for j = 0:l-1
+                w2 = w * w
                 for k = 0:m-1
                     c0 = X[bp+stride*(k+j*m)]
                     c1 = X[bp+stride*(k+j*m+l*m)]
@@ -62,7 +63,7 @@ function fftr3!(Y::Vector{T}, X::Vector{T},
                     d2 = pmim * c31 * (c1 - c2)
                     Y[bp+stride*(k+3*j*m)] = c0 + d0
                     Y[bp+stride*(k+3*j*m+m)] = w * (d1 + d2)
-                    Y[bp+stride*(k+3*j*m+2*m)] = w * w * (d1 - d2)
+                    Y[bp+stride*(k+3*j*m+2*m)] = w2 * (d1 - d2)
                 end
                 w = w * w_l
             end
@@ -77,18 +78,20 @@ end
 function fftr4!(Y::Vector{T}, X::Vector{T},
     N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
     @inbounds begin
-    l = N >>> 2
-    m = 1
+        l = N >>> 2
+        m = 1
 
-    u = 2 * pi / 4
+        u = 2 * pi / 4
 
-    r = inverse ? u : -u
-    pmim = inverse ? 1.0im : -1.0im
+        r = inverse ? u : -u
+        pmim = inverse ? 1.0im : -1.0im
 
         for t = 1:e1
             w_l = exp(im * r / l)
             w = one(T)
             for j = 0:l-1
+                w2 = w * w
+                w3 = w2 * w
                 for k = 0:m-1
                     c0 = X[bp+stride*(k+j*m)]
                     c1 = X[bp+stride*(k+j*m+m*l)]
@@ -101,8 +104,8 @@ function fftr4!(Y::Vector{T}, X::Vector{T},
                     d3 = pmim * d3
                     Y[bp+stride*(k+4*j*m)] = d0 + d2
                     Y[bp+stride*(k+4*j*m+m)] = w * (d1 + d3)
-                    Y[bp+stride*(k+4*j*m+2*m)] = w * w * (d0 - d2)
-                    Y[bp+stride*(k+4*j*m+3*m)] = w * w * w * (d1 - d3)
+                    Y[bp+stride*(k+4*j*m+2*m)] = w2 * (d0 - d2)
+                    Y[bp+stride*(k+4*j*m+3*m)] = w3 * (d1 - d3)
                 end
                 w = w * w_l
             end
@@ -117,23 +120,26 @@ end
 function fftr5!(Y::Vector{T}, X::Vector{T},
     N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
     @inbounds begin
-    l = N ÷ 5
-    m = 1
+        l = N ÷ 5
+        m = 1
 
-    u = 2 * pi / 5
+        u = 2 * pi / 5
 
-    c50 = 0.25
-    c51 = sin(2.0 * pi / 5.0)
-    c52 = (sqrt(5) / 4)
-    c53 = (sin(pi / 5.0) / sin(2.0 * pi / 5.0))
+        c50 = 0.25
+        c51 = sin(2.0 * pi / 5.0)
+        c52 = (sqrt(5) / 4)
+        c53 = (sin(pi / 5.0) / sin(2.0 * pi / 5.0))
 
-    r = inverse ? u : -u
-    pmim = inverse ? 1.0im : -1.0im
+        r = inverse ? u : -u
+        pmim = inverse ? 1.0im : -1.0im
 
         for t = 1:e1
             w_l = exp(im * r / l)
             w = one(T)
             for j = 0:l-1
+                w2 = w * w
+                w3 = w2 * w
+                w4 = w3 * w
                 for k = 0:m-1
                     c0 = X[bp+stride*(k+j*m)]
                     c1 = X[bp+stride*(k+j*m+l*m)]
@@ -153,9 +159,9 @@ function fftr5!(Y::Vector{T}, X::Vector{T},
                     d10 = pmim * (c53 * d2 - d3)
                     Y[bp+stride*(k+5*j*m)] = c0 + d4
                     Y[bp+stride*(k+5*j*m+m)] = w * (d7 + d9)
-                    Y[bp+stride*(k+5*j*m+2*m)] = w * w * (d8 + d10)
-                    Y[bp+stride*(k+5*j*m+3*m)] = (w^3) * (d8 - d10)
-                    Y[bp+stride*(k+5*j*m+4*m)] = (w^4) * (d7 - d9)
+                    Y[bp+stride*(k+5*j*m+2*m)] = w2 * (d8 + d10)
+                    Y[bp+stride*(k+5*j*m+3*m)] = w3 * (d8 - d10)
+                    Y[bp+stride*(k+5*j*m+4*m)] = w4 * (d7 - d9)
                 end
                 w = w * w_l
             end
@@ -170,27 +176,32 @@ end
 function fftr7!(Y::Vector{T}, X::Vector{T},
     N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
     @inbounds begin
-    l = N ÷ 7
-    m = 1
+        l = N ÷ 7
+        m = 1
 
-    u = 2 * pi / 7
+        u = 2 * pi / 7
 
-    c71 = -(cos(u) + cos(2u) + cos(3u)) / 3
-    c72 = (2cos(u) - cos(2u) - cos(3u)) / 3
-    c73 = (cos(u) - 2cos(2u) + cos(3u)) / 3
-    c74 = (cos(u) + cos(2u) - 2cos(3u)) / 3
-    c75 = (sin(u) + sin(2u) - sin(3u)) / 3
-    c76 = (2sin(u) - sin(2u) + sin(3u)) / 3
-    c77 = (-sin(u) + 2sin(2u) + sin(3u)) / 3
-    c78 = (sin(u) + sin(2u) + 2sin(3u)) / 3
+        c71 = -(cos(u) + cos(2u) + cos(3u)) / 3
+        c72 = (2cos(u) - cos(2u) - cos(3u)) / 3
+        c73 = (cos(u) - 2cos(2u) + cos(3u)) / 3
+        c74 = (cos(u) + cos(2u) - 2cos(3u)) / 3
+        c75 = (sin(u) + sin(2u) - sin(3u)) / 3
+        c76 = (2sin(u) - sin(2u) + sin(3u)) / 3
+        c77 = (-sin(u) + 2sin(2u) + sin(3u)) / 3
+        c78 = (sin(u) + sin(2u) + 2sin(3u)) / 3
 
-    r = inverse ? u : -u
-    pmim = inverse ? 1.0im : -1.0im
+        r = inverse ? u : -u
+        pmim = inverse ? 1.0im : -1.0im
 
         for t = 1:e1
             w_l = exp(im * r / l)
             w = one(T)
             for j = 0:l-1
+                w2 = w * w
+                w3 = w2 * w
+                w4 = w3 * w
+                w5 = w4 * w
+                w6 = w5 * w
                 for k = 0:m-1
                     c0 = X[bp+stride*(k+j*m)]
                     c1 = X[bp+stride*(k+j*m+l*m)]
@@ -235,11 +246,11 @@ function fftr7!(Y::Vector{T}, X::Vector{T},
 
                     Y[bp+stride*(k+7*j*m)] = c0 + a7
                     Y[bp+stride*(k+7*j*m+m)] = w * (x2 - x5)
-                    Y[bp+stride*(k+7*j*m+2*m)] = w^2 * (x3 - x6)
-                    Y[bp+stride*(k+7*j*m+3*m)] = w^3 * (x4 - x7)
-                    Y[bp+stride*(k+7*j*m+4*m)] = w^4 * (x4 + x7)
-                    Y[bp+stride*(k+7*j*m+5*m)] = w^5 * (x3 + x6)
-                    Y[bp+stride*(k+7*j*m+6*m)] = w^6 * (x2 + x5)
+                    Y[bp+stride*(k+7*j*m+2*m)] = w2 * (x3 - x6)
+                    Y[bp+stride*(k+7*j*m+3*m)] = w3 * (x4 - x7)
+                    Y[bp+stride*(k+7*j*m+4*m)] = w4 * (x4 + x7)
+                    Y[bp+stride*(k+7*j*m+5*m)] = w5 * (x3 + x6)
+                    Y[bp+stride*(k+7*j*m+6*m)] = w6 * (x2 + x5)
                 end
                 w = w * w_l
             end
@@ -252,23 +263,29 @@ function fftr7!(Y::Vector{T}, X::Vector{T},
 end
 
 function fftr8!(Y::Vector{T}, X::Vector{T},
-    N::Int64, e1::Int64, bp::Int64, stride::Int64,inverse::Bool) where {T<:Complex}
+    N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
     @inbounds begin
-    l = N >>> 3
-    m = 1
+        l = N >>> 3
+        m = 1
 
-    u = 2 * pi / 8
+        u = 2 * pi / 8
 
-    c81 = (sqrt(2) / 2)
-    c82 = -(sqrt(2) / 2)
+        c81 = (sqrt(2) / 2)
+        c82 = -(sqrt(2) / 2)
 
-    r = inverse ? u : -u
-    pmim = inverse ? 1.0im : -1.0im
+        r = inverse ? u : -u
+        pmim = inverse ? 1.0im : -1.0im
 
         for t = 1:e1
             w_l = exp(im * r / l)
             w = one(T)
             for j = 0:l-1
+                w2 = w * w
+                w3 = w2 * w
+                w4 = w3 * w
+                w5 = w4 * w
+                w6 = w5 * w
+                w7 = w6 * w
                 for k = 0:m-1
                     c0 = X[bp+stride*(k+j*m)]
                     c1 = X[bp+stride*(k+j*m+l*m)]
@@ -298,12 +315,12 @@ function fftr8!(Y::Vector{T}, X::Vector{T},
                     e9 = d3 - e5
                     Y[bp+stride*(k+8*j*m)] = e0 + e2
                     Y[bp+stride*(k+8*j*m+m)] = w * (e6 + e8)
-                    Y[bp+stride*(k+8*j*m+2*m)] = w * w * (e1 + e3)
-                    Y[bp+stride*(k+8*j*m+3*m)] = w^3 * (e7 - e9)
-                    Y[bp+stride*(k+8*j*m+4*m)] = w^4 * (e0 - e2)
-                    Y[bp+stride*(k+8*j*m+5*m)] = w^5 * (e7 + e9)
-                    Y[bp+stride*(k+8*j*m+6*m)] = w^6 * (e1 - e3)
-                    Y[bp+stride*(k+8*j*m+7*m)] = w^7 * (e6 - e8)
+                    Y[bp+stride*(k+8*j*m+2*m)] = w2 * (e1 + e3)
+                    Y[bp+stride*(k+8*j*m+3*m)] = w3 * (e7 - e9)
+                    Y[bp+stride*(k+8*j*m+4*m)] = w4 * (e0 - e2)
+                    Y[bp+stride*(k+8*j*m+5*m)] = w5 * (e7 + e9)
+                    Y[bp+stride*(k+8*j*m+6*m)] = w6 * (e1 - e3)
+                    Y[bp+stride*(k+8*j*m+7*m)] = w7 * (e6 - e8)
                 end
                 w = w * w_l
             end
@@ -318,29 +335,36 @@ end
 function fftr9!(Y::Vector{T}, X::Vector{T},
     N::Int64, e1::Int64, bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
     @inbounds begin
-    l = N ÷ 9
-    m = 1
+        l = N ÷ 9
+        m = 1
 
-    u = 2 * pi / 9
+        u = 2 * pi / 9
 
-    c90 = 0.5
-    c91 = (3.0 / 2)
-    c93 = (2cos(u) - cos(2u) - cos(4u)) / 3
-    c94 = (cos(u) + cos(2u) - 2cos(4u)) / 3
-    c95 = (cos(u) - 2cos(2u) + cos(4u)) / 3
+        c90 = 0.5
+        c91 = (3.0 / 2)
+        c93 = (2cos(u) - cos(2u) - cos(4u)) / 3
+        c94 = (cos(u) + cos(2u) - 2cos(4u)) / 3
+        c95 = (cos(u) - 2cos(2u) + cos(4u)) / 3
 
-    su = sin(u)
-    s2u = sin(2u)
-    s3u = sin(3u)
-    s4u = sin(4u)
+        su = sin(u)
+        s2u = sin(2u)
+        s3u = sin(3u)
+        s4u = sin(4u)
 
-    r = inverse ? u : -u
-    pmim = inverse ? 1.0im : -1.0im
+        r = inverse ? u : -u
+        pmim = inverse ? 1.0im : -1.0im
 
         for t = 1:e1
             w_l = exp(im * r / l)
             w = one(T)
             for j = 0:l-1
+                w2 = w * w
+                w3 = w2 * w
+                w4 = w3 * w
+                w5 = w4 * w
+                w6 = w5 * w
+                w7 = w6 * w
+                w8 = w7 * w
                 for k = 0:m-1
                     c0 = X[bp+stride*(k+j*m)]
                     c1 = X[bp+stride*(k+j*m+l*m)]
@@ -401,13 +425,13 @@ function fftr9!(Y::Vector{T}, X::Vector{T},
 
                     Y[bp+stride*(k+9*j*m)] = m0
                     Y[bp+stride*(k+9*j*m+m)] = w * (s7 + s10)
-                    Y[bp+stride*(k+9*j*m+2*m)] = w^2 * (s8 - s11)
-                    Y[bp+stride*(k+9*j*m+3*m)] = w^3 * (s6 + m6)
-                    Y[bp+stride*(k+9*j*m+4*m)] = w^4 * (s9 + s12)
-                    Y[bp+stride*(k+9*j*m+5*m)] = w^5 * (s9 - s12)
-                    Y[bp+stride*(k+9*j*m+6*m)] = w^6 * (s6 - m6)
-                    Y[bp+stride*(k+9*j*m+7*m)] = w^7 * (s8 + s11)
-                    Y[bp+stride*(k+9*j*m+8*m)] = w^8 * (s7 - s10)
+                    Y[bp+stride*(k+9*j*m+2*m)] = w2 * (s8 - s11)
+                    Y[bp+stride*(k+9*j*m+3*m)] = w3 * (s6 + m6)
+                    Y[bp+stride*(k+9*j*m+4*m)] = w4 * (s9 + s12)
+                    Y[bp+stride*(k+9*j*m+5*m)] = w5 * (s9 - s12)
+                    Y[bp+stride*(k+9*j*m+6*m)] = w6 * (s6 - m6)
+                    Y[bp+stride*(k+9*j*m+7*m)] = w7 * (s8 + s11)
+                    Y[bp+stride*(k+9*j*m+8*m)] = w8 * (s7 - s10)
                 end
                 w = w * w_l
             end
