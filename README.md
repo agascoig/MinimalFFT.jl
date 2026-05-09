@@ -2,7 +2,8 @@
 # MinimalFFT.jl
 
 This is an implementation of the AbstractFFTs.jl interface
-in Julia, with some formal prime-factor indexing proofs in Lean.  This package easily allows for fixed-point and symbolic FFTs or different precision.
+in Julia.  This package easily allows for fixed-point and
+symbolic FFTs (for verification of FFT implementations), or different precision.
 
 The performance is not currently competitive with FFTW.
 
@@ -30,11 +31,8 @@ This is not fully implemented (only shows can prove reconstruction) due to diffi
 A modern approach to the FFT is to use the Prime Factor Algorithm with CTA (here specifically Stockham) for each radix, which
 is done here.
 
-The code uses a non-standard scrambling/descrambling instead of Good-CRT with lookup table.  See these documents for a summary:
-
-[PFA 2 decomposition](https://agascoig.github.io/MinimalFFT.jl/pfa2.html)
-
-[PFA 3 decomposition](https://agascoig.github.io/MinimalFFT.jl/pfa3.html)
+The code uses a non-standard scrambling/descrambling instead of Good-CRT with lookup table.  See https://github.com/agascoig/CPPMinimalFFT/docs
+for details.
 
 ## Testing
 
