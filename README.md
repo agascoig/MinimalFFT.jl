@@ -31,8 +31,7 @@ This is not fully implemented (only shows can prove reconstruction) due to diffi
 A modern approach to the FFT is to use the Prime Factor Algorithm with CTA (here specifically Stockham) for each radix, which
 is done here.
 
-The code uses a non-standard scrambling/descrambling instead of Good-CRT with lookup table.  See https://github.com/agascoig/CPPMinimalFFT/docs
-for details.
+The code uses a non-standard scrambling/descrambling instead of Good-CRT with lookup table.  See https://github.com/agascoig/CPPMinimalFFT/tree/main/docs for details.
 
 ## Testing
 
