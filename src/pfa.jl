@@ -1,75 +1,83 @@
 #
 # pfa.jl - Prime Factor Algorithm
 
-import LinearAlgebra: transpose!
+#import LinearAlgebra: transpose!
 
 function extended_euclid(a::Int, b::Int)
     @assert a >= 0 && b >= 0 "a and b must be non-negative"
     if a == 0
         return (b, 0, 1)
     else
-        (g, y, x) = extended_euclid(mod(b, a), a)
+        (g, x, y) = extended_euclid(mod(b, a), a)
     end
-    (g, x - (b ÷ a) * y, y)
+    (g, y - (b ÷ a) * x, x)
+end
+
+function nmap_2!(Y::Vector{T}, X::Vector{T}, bp::Int64,
+    stride::Int64, N1::Int64, N2::Int64, Q1P::Int64) where {T<:Complex}
+    @inline mask_mux_mod(a, B) = a - (B & -(a ≥ B))
+    rhs_n_stride = bp
+    for n1p = 0:N1-1
+        R1 = 0
+        for n2p = 0:N2-1
+            n1 = mask_mux_mod(n1p + R1, N1)
+            lhs_n = n1 + N1 * n2p
+            Y[bp+stride*lhs_n] = X[rhs_n_stride]
+            R1 = mask_mux_mod(R1 + Q1P, N1)
+            rhs_n_stride += stride
+        end
+    end
+end
+
+function kmap_2!(Y::Vector{T}, X::Vector{T}, bp::Int64,
+    stride::Int64, N1::Int64, N2::Int64, Q2P::Int64) where {T<:Complex}
+    @inline mask_mux_mod(a, B) = a - (B & -(a ≥ B))
+    lhs_k_stride = bp
+    for k2p = 0:N2-1
+        R1 = 0
+        for k1p = 0:N1-1
+            k2 = mask_mux_mod(k2p + R1, N2)
+            rhs_k = k1p + k2 * N1
+            Y[lhs_k_stride] = X[bp+stride*rhs_k]
+            R1 = mask_mux_mod(R1 + Q2P, N2)
+            lhs_k_stride += stride
+        end
+    end
 end
 
 function prime_factor!(Y::Vector{T}, X::Vector{T},
     e1::Int, e2::Int, N1::Int, N2::Int,
     fft1!::Function, fft2!::Function,
     bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
-    @inbounds begin
-        N = N1 * N2
-        Ns = (N1, N2)
+    N = N1 * N2
+    Ns = (N1, N2)
 
-        (g, M1, M2) = extended_euclid(N1, N2)
-        @assert g == 1 "prime_factor N1 and N2 must be coprime"
+    (g, M1, M2) = extended_euclid(N1, N2)
+    @assert g == 1 "prime_factor N1 and N2 must be coprime"
 
-        # Not using standard Good-CRT mapping.  See "A Generalized Mixed-Radix Algorithm for
-        # Memory-Based FFT Processors."  IEEE Tran. on Circuits and Systems-II.  Jan 2010.
+    # Not using standard Good-CRT mapping.  See "A Generalized Mixed-Radix Algorithm for
+    # Memory-Based FFT Processors."  IEEE Tran. on Circuits and Systems-II.  Jan 2010.
 
-        @inline mask_mux_mod(a, B) = a - (B & -(a ≥ B))
+    @inline mask_mux_mod(a, B) = a - (B & -(a ≥ B))
 
-        Q1P = mod(M2, N1)
+    Q1P = mod(M2, N1)
 
-        rhs_n = 0
-        L2 = 0
-        for n1p = 0:N1-1
-            R1 = 0
-            L2 = 0
-            for n2p = 0:N2-1
-                n1 = mask_mux_mod(n1p + R1, N1)
-                lhs_n = n1 + L2
-                Y[bp+stride*lhs_n] = X[bp+stride*rhs_n]
-                R1 = mask_mux_mod(R1 + Q1P, N1)
-                rhs_n += 1
-                L2 += N1
-            end
-        end
+    nmap_2!(Y, X, bp, stride, N1, N2, Q1P)
 
-        Y2D_N1N2 = reshape(Y, Ns)
-        X2D_N1N2 = reshape(X, Ns)
+    Y2D_N1N2 = reshape(Y, Ns)
+    X2D_N1N2 = reshape(X, Ns)
 
-        X2D_N1N2, Y2D_N1N2 = do_fft(X2D_N1N2, Y2D_N1N2, fft1!, Ns, e1, 1, bp, stride, inverse)
-        Y2D_N1N2, X2D_N1N2 = do_fft(Y2D_N1N2, X2D_N1N2, fft2!, Ns, e2, 2, bp, stride, inverse)
+    X2D_N1N2, Y2D_N1N2 = do_fft(X2D_N1N2, Y2D_N1N2, fft1!, Ns, e1, 1, bp, stride, inverse)
+    Y2D_N1N2, X2D_N1N2 = do_fft(Y2D_N1N2, X2D_N1N2, fft2!, Ns, e2, 2, bp, stride, inverse)
 
-        Y = reshape(Y2D_N1N2, N)
-        X = reshape(X2D_N1N2, N)
+    Y = reshape(Y2D_N1N2, N)
+    X = reshape(X2D_N1N2, N)
 
-        Q2P = mod(M1, N2)
+    Q2P = mod(M1, N2)
 
-        lhs_k = 0
-        for k2p = 0:N2-1
-            R1 = 0
-            for k1p = 0:N1-1
-                k2 = mask_mux_mod(k2p + R1, N2)
-                rhs_k = k1p + k2 * N1
-                X[bp+stride*lhs_k] = Y[bp+stride*rhs_k]
-                R1 = mask_mux_mod(R1 + Q2P, N2)
-                lhs_k += 1
-            end
-        end
-        (X, Y)
-    end
+    kmap_2!(X, Y, bp, stride, N1, N2, Q2P)
+
+    (X, Y)
 end
 
 function Qs(N1::Int, N2::Int, N3::Int)
@@ -82,47 +90,41 @@ function Qs(N1::Int, N2::Int, N3::Int)
     (p1, p2, p3, p4, q1, q2, q3, q4)
 end
 
-function nmap!(Y, X, bp, stride, N1, N2, N3, Q1P, Q2P)
-    @inbounds begin
-        @inline mask_mux_mod(a, B) = a - (B & -(a ≥ B))
-
-        rhs_n = 0
-        for n1p = 0:N1-1
-            R1 = 0
-            for n2p = 0:N2-1
-                R2 = 0
-                for n3p = 0:N3-1
-                    n1 = mask_mux_mod(n1p + R1, N1)
-                    n2 = mask_mux_mod(n2p + R2, N2)
-                    lhs_n = n1 + N1 * n2 + N1 * N2 * n3p
-                    Y[bp+stride*lhs_n] = X[bp+stride*rhs_n]
-                    R1 = mask_mux_mod(R1 + Q1P, N1)
-                    R2 = mask_mux_mod(R2 + Q2P, N2)
-                    rhs_n += 1
-                end
+function nmap_3!(Y, X, bp, stride, N1, N2, N3, Q1P, Q2P)
+    @inline mask_mux_mod(a, B) = a - (B & -(a ≥ B))
+    rhs_n_stride = bp
+    for n1p = 0:N1-1
+        R1 = 0
+        for n2p = 0:N2-1
+            R2 = 0
+            for n3p = 0:N3-1
+                n1 = mask_mux_mod(n1p + R1, N1)
+                n2 = mask_mux_mod(n2p + R2, N2)
+                lhs_n = n1 + N1 * n2 + N1 * N2 * n3p
+                Y[bp+stride*lhs_n] = X[rhs_n_stride]
+                R1 = mask_mux_mod(R1 + Q1P, N1)
+                R2 = mask_mux_mod(R2 + Q2P, N2)
+                rhs_n_stride += stride
             end
         end
     end
 end
 
-function kmap!(Y, X, bp, stride, N1, N2, N3, Q4P, Q3P)
-    @inbounds begin
-        @inline mask_mux_mod(a, B) = a - (B & -(a ≥ B))
-
-        lhs_k = 0
-        for k3p = 0:N3-1
-            R2 = 0
-            for k2p = 0:N2-1
-                R1 = 0
-                for k1p = 0:N1-1
-                    k2 = mask_mux_mod(k2p + R1, N2)
-                    k3 = mask_mux_mod(k3p + R2, N3)
-                    rhs_k = k1p + N1 * k2 + N1 * N2 * k3
-                    Y[bp+stride*lhs_k] = X[bp+stride*rhs_k]
-                    R1 = mask_mux_mod(R1 + Q4P, N2)
-                    R2 = mask_mux_mod(R2 + Q3P, N3)
-                    lhs_k += 1
-                end
+function kmap_3!(Y, X, bp, stride, N1, N2, N3, Q3P, Q4P)
+    @inline mask_mux_mod(a, B) = a - (B & -(a ≥ B))
+    lhs_k_stride = bp
+    for k3p = 0:N3-1
+        R2 = 0
+        for k2p = 0:N2-1
+            R1 = 0
+            for k1p = 0:N1-1
+                k2 = mask_mux_mod(k2p + R1, N2)
+                k3 = mask_mux_mod(k3p + R2, N3)
+                rhs_k = k1p + N1 * k2 + N1 * N2 * k3
+                Y[lhs_k_stride] = X[bp+stride*rhs_k]
+                R1 = mask_mux_mod(R1 + Q4P, N2)
+                R2 = mask_mux_mod(R2 + Q3P, N3)
+                lhs_k_stride += stride
             end
         end
     end
@@ -132,30 +134,28 @@ function prime_factor!(Y::Vector{T}, X::Vector{T}, e1::Int64, e2::Int64, e3::Int
     N1::Int64, N2::Int64, N3::Int64, # embedded sizes
     fft1!::Function, fft2!::Function, fft3!::Function,
     bp::Int64, stride::Int64, inverse::Bool) where {T<:Complex}
-    @inbounds begin
-        N = N1 * N2 * N3
-        Ns = (N1, N2, N3)
+    N = N1 * N2 * N3
+    Ns = (N1, N2, N3)
 
-        B = (p1, p2, p3, p4, Q1, Q2, Q3, Q4) = Qs(N1, N2, N3)
+    (_, _, _, _, Q1, Q2, Q3, Q4) = Qs(N1, N2, N3)
 
-        Q1P = mod(Q1, N1)
-        Q2P = mod(Q2, N2)
-        Q3P = mod(Q3, N3)
-        Q4P = mod(Q4, N2)
+    Q1P = mod(Q1, N1)
+    Q2P = mod(Q2, N2)
+    Q3P = mod(Q3, N3)
+    Q4P = mod(Q4, N2)
 
-        nmap!(Y, X, bp, stride, N1, N2, N3, Q1P, Q2P)
+    nmap_3!(Y, X, bp, stride, N1, N2, N3, Q1P, Q2P)
 
-        Y123 = reshape(Y, Ns)
-        X123 = reshape(X, Ns)
+    Y123 = reshape(Y, Ns)
+    X123 = reshape(X, Ns)
 
-        X123, Y123 = do_fft(X123, Y123, fft1!, Ns, e1, 1, bp, stride, inverse)
-        Y123, X123 = do_fft(Y123, X123, fft2!, Ns, e2, 2, bp, stride, inverse)
-        X123, Y123 = do_fft(X123, Y123, fft3!, Ns, e3, 3, bp, stride, inverse)
+    X123, Y123 = do_fft(X123, Y123, fft1!, Ns, e1, 1, bp, stride, inverse)
+    Y123, X123 = do_fft(Y123, X123, fft2!, Ns, e2, 2, bp, stride, inverse)
+    X123, Y123 = do_fft(X123, Y123, fft3!, Ns, e3, 3, bp, stride, inverse)
 
-        Y = reshape(Y123, N)
-        X = reshape(X123, N)
+    Y = reshape(Y123, N)
+    X = reshape(X123, N)
 
-        kmap!(Y, X, bp, stride, N1, N2, N3, Q4P, Q3P)
-        (Y, X)
-    end
+    kmap_3!(Y, X, bp, stride, N1, N2, N3, Q3P, Q4P)
+    (Y, X)
 end
